@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.tse.poc.dao.AdminRepository;
-import fr.tse.poc.dao.ManagerRepository;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

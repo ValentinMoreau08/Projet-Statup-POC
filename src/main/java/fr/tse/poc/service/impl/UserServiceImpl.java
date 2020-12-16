@@ -1,5 +1,6 @@
 package fr.tse.poc.service.impl;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -55,6 +56,11 @@ public class UserServiceImpl implements UserService{
 		userRepository.save(user);
 		projectRepository.save(project);
 		return ti;
+	}
+
+	@Override
+	public Collection<User> findAllUsers() {
+		return userRepository.findAll();
 	}
 
 }

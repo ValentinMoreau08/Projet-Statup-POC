@@ -3,9 +3,9 @@ package fr.tse.poc.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import fr.tse.poc.domain.Manager;
+import fr.tse.poc.domain.Admin;
 
 @Repository
-public interface ManagerRepository extends JpaRepository<Manager, Long> {
+public interface AdminRepository extends JpaRepository<Admin, Long> {
 
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
 import fr.tse.poc.service.UserService;
@@ -27,12 +26,15 @@ public class UserController {
 		return userService.findAllUsers();
 	}
 	
+	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
+	// Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
 	@PostMapping("/users/{id}/times")
 	public Time createTime(@RequestBody Time time, @PathVariable Long id) {
-		//User user = this.userService.getUserById(id);
-		User user = userService.findAllUsers().iterator().next(); // A changer, c'est juste pour tester
+		/*User user = this.userService.findUserById(id);
+		System.out.println("Id is = "+id);
 		Project project = time.getProject();
-		return userService.createTime(user, project, time.getTime(), time.getDate());
+		return userService.createTime(user, project, time.getTime(), time.getDate());*/
+		return null;
 	}
 	
 }

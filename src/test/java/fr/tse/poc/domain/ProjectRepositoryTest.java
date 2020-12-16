@@ -1,4 +1,4 @@
-package fr.tse.poc;
+package fr.tse.poc.domain;
 
 import fr.tse.poc.dao.ProjectRepository;
 import fr.tse.poc.domain.Project;

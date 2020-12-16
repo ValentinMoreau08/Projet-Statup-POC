@@ -63,4 +63,14 @@ public class UserServiceImpl implements UserService{
 		return userRepository.findAll();
 	}
 
+	@Override
+	public User findUserById(Long id) {
+		return this.userRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public Time findTimeById(Long id) {
+		return this.timeRepository.findById(id).orElse(null);
+	}
+
 }

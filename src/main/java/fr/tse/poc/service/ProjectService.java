@@ -8,4 +8,5 @@ public interface ProjectService {
 
     public Collection<Project> findAllProjects();
     public Project createProject(String name, String clientName, String description);
+    public Project findProjectById(Long id);
 }

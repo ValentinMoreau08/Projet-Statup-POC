@@ -3,61 +3,70 @@ package fr.tse.poc.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.util.Date;
-import java.util.Objects;
 
 @Entity
 public class Time {
-    private @Id
-    @GeneratedValue
-    Long id;
+	
+    private @Id @GeneratedValue Long id;
     private int time;
-    private Date date;
+    private @Temporal(TemporalType.TIMESTAMP) Date date;
+    
+    private @ManyToOne User user;
+    private @ManyToOne Project project;
 
-    public Time() {
-    }
+    public Time() {}
 
     public Time(int time, Date date){
         this.time=time;
         this.date=date;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
+    public int getTime() {return time;}
+    public void setTime(int time) {this.time = time;}
+    public Date getDate() { return date;}
+    public void setDate(Date date) {this.date = date; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Time other = (Time) obj;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (date.equals(other.date))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (project == null) {
+			if (other.project != null)
+				return false;
+		} else if (!project.equals(other.project))
+			return false;
+		if (time != other.time)
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		return true;
+	}
+    
+    
 
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Time time1 = (Time) o;
-        return time == time1.time &&
-                Objects.equals(id, time1.id) &&
-                date.compareTo(time1.date)==0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, time, date);
-    }
 }

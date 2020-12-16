@@ -8,15 +8,12 @@ import javax.persistence.MappedSuperclass;
 public class Utilisateur {
 
 	private @Id @GeneratedValue Long id;
-	
 	private String login;
 	private String password;
 	private String name;
 	private String firstname;
 	
-	public Utilisateur() {
-		
-	}
+	public Utilisateur() {}
 	
 	public Utilisateur(String login, String password, String name, String firstname) {
 		super();
@@ -26,36 +23,16 @@ public class Utilisateur {
 		this.firstname = firstname;
 	}
 	
-	public String getLogin() {
-		return login;
-	}
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getFirstname() {
-		return firstname;
-	}
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-	public Long getId() {
-		return this.id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+	public String getLogin() {return login;}
+	public void setLogin(String login) {this.login = login;}
+	public String getPassword() {return password;}
+	public void setPassword(String password) {this.password = password;}
+	public String getName() {return name;}
+	public void setName(String name) {this.name = name;}
+	public String getFirstname() {return firstname;}
+	public void setFirstname(String firstname) {this.firstname = firstname;}
+	public Long getId() {return this.id;}
+	public void setId(Long id) {this.id = id;}
 	
 	@Override
 	public boolean equals(Object obj) {

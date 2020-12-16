@@ -30,7 +30,7 @@ public class UserRepositoryTest {
 		Manager manager = new Manager("loginTest", "passwordTest", "nameTest", "firstnameTest");
 		manager = managerRepository.save(manager);
 		
-		User user = new User("loginTest", "passwordTest", "nameTest", "firstnameTest", manager);
+		User user = new User("loginTest", "passwordTest", "nameTest", "firstnameTest");
 		user = userRepository.save(user);
 		
 		users = userRepository.findAll();

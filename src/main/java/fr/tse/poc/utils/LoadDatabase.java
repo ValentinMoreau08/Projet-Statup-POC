@@ -30,12 +30,21 @@ public class LoadDatabase {
 		return new CommandLineRunner() {
 			@Override
 			public void run(String... args) throws Exception {
+				if(!needInitializer(userRepository, managerRepository, adminRepository)) return;
 				initAdmin(adminRepository);
 				initManagers(managerRepository);
 				initUsers(userRepository);
 				
 			}
 		};
+	}
+	
+	// Check if database is full empty, so that we need to initialize some data
+	public boolean needInitializer(UserRepository userRepository, ManagerRepository managerRepository, AdminRepository adminRepository) {
+		if(userRepository.findAll().size() != 0) return false;
+		if(managerRepository.findAll().size() != 0) return false;
+		if(adminRepository.findAll().size() != 0) return false;
+		return true;
 	}
 	
 	public void initAdmin(AdminRepository adminRepository) {
@@ -55,9 +64,9 @@ public class LoadDatabase {
 	}
 	
 	public void initUsers(UserRepository userRepository) {
-		user1 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager1);
-		user2 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager1);
-		user3 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager2);
+		user1 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1");
+		user2 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1");
+		user3 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1");
 		userRepository.save(user1);
 		userRepository.save(user2);
 		userRepository.save(user3);

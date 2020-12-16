@@ -14,7 +14,7 @@ public class Manager extends Utilisateur {
 	private Set<User> users;
 	
 	public Manager() {
-		
+		this.users = new HashSet<User>();
 	}
 	
 	public Manager(String login, String password, String name, String firstname) {
@@ -22,14 +22,11 @@ public class Manager extends Utilisateur {
 		this.users = new HashSet<User>();
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
-
+	public Set<User> getUsers() {return users;}
+	public void setUsers(Set<User> users) {this.users = users;}
+	public void addUser(User user) {this.users.add(user);}
+	public void deleteUser(User user) {this.users.remove(user);}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(!super.equals(obj))
@@ -42,7 +39,5 @@ public class Manager extends Utilisateur {
 			return false;
 		return true;
 	}
-	
-	
 
 }

@@ -59,9 +59,9 @@ public class LoadTestDatabase {
 	}
 	
 	public void initUsers(UserRepository userRepository) {
-		user1 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager1);
-		user2 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager1);
-		user3 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager2);
+		user1 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1");
+		user2 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1");
+		user3 = new User("userLogin1", "userLogin1", "userName1", "userFirstname1");
 		userRepository.save(user1);
 		userRepository.save(user2);
 		userRepository.save(user3);

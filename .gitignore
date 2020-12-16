@@ -200,3 +200,10 @@ $RECYCLE.BIN/
 /target/
 *.properties
 src/main/resources/application.properties
+
+# Application properties
+src/main/resources/application-test.properties
+src/main/resources/application.properties
+
+# .class
+*.class

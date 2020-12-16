@@ -1,5 +1,7 @@
 package fr.tse.poc.utils;
 
+import fr.tse.poc.dao.ProjectRepository;
+import fr.tse.poc.domain.Project;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +24,11 @@ public class LoadDatabase {
 	private User user1;
 	private User user2;
 	private User user3;
-	
+	private Project project1;
 	
 	@Bean	// Method that will create beam disponible in spring environnement
 	@Profile("!test")
-	CommandLineRunner initDatabase(UserRepository userRepository, ManagerRepository managerRepository, AdminRepository adminRepository) {
+	CommandLineRunner initDatabase(UserRepository userRepository, ManagerRepository managerRepository, AdminRepository adminRepository, ProjectRepository projectRepository) {
 		return new CommandLineRunner() {
 			@Override
 			public void run(String... args) throws Exception {
@@ -34,6 +36,7 @@ public class LoadDatabase {
 				initAdmin(adminRepository);
 				initManagers(managerRepository);
 				initUsers(userRepository);
+				initProjects(projectRepository);
 				
 			}
 		};
@@ -70,6 +73,11 @@ public class LoadDatabase {
 		userRepository.save(user1);
 		userRepository.save(user2);
 		userRepository.save(user3);
+	}
+
+	public void initProjects(ProjectRepository projectRepository){
+		project1 = new Project("project1","client1","description1");
+		projectRepository.save(project1);
 	}
 	
 	

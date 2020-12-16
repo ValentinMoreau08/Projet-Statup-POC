@@ -32,6 +32,10 @@ public class Time {
     public void setTime(int time) {this.time = time;}
     public Date getDate() { return date;}
     public void setDate(Date date) {this.date = date; }
+	public User getUser() {return user;}
+	public void setUser(User user) {this.user = user;}
+	public Project getProject() {return project;}
+	public void setProject(Project project) {this.project = project;}
 
 	@Override
 	public boolean equals(Object obj) {

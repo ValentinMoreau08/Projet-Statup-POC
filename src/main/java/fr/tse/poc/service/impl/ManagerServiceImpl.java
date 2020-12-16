@@ -21,4 +21,9 @@ public class ManagerServiceImpl implements ManagerService {
 		return this.managerRepository.findAll();
 	}
 
+	@Override
+	public Manager findManagerById(Long id) {
+		return this.managerRepository.findById(id).orElse(null);
+	}
+
 }

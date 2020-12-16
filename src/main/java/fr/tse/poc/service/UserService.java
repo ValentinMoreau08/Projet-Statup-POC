@@ -13,4 +13,6 @@ public interface UserService {
 	public User createUserAsManager(String login, String password, String name, String firstname, Manager manager);
 	public Collection<User> findAllUsers();
 	public Time createTime(User user, Project project, int time, Date date);
+	public User findUserById(Long id);
+	public Time findTimeById(Long id);
 }

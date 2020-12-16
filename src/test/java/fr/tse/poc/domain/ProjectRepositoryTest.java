@@ -27,16 +27,18 @@ public class ProjectRepositoryTest {
         List<Project> projects = projectRepository.findAll();
         int prevSize = projects.size();
 
-        Project p1 = new Project("p1", "c1", "test");
-        p1 = projectRepository.save(p1);
+        Project project = new Project("p1", "c1", "test");
+        project = projectRepository.save(project);
+
+        projects = projectRepository.findAll();
 
         Assertions.assertNotNull(projects);
         Assertions.assertEquals(prevSize + 1, projects.size());
 
-        Project newProject = projectRepository.findById(p1.getId()).orElse(null);
-        Assertions.assertEquals(newProject, p1);
+        Project newProject = projectRepository.findById(project.getId()).orElse(null);
+        Assertions.assertEquals(newProject, project);
 
-        projectRepository.delete(p1);
+        projectRepository.delete(project);
 
         projects = projectRepository.findAll();
         Assertions.assertNotNull(projects);

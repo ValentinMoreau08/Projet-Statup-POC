@@ -4,6 +4,7 @@ import javax.persistence.Id;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import java.util.Objects;
 
 @Entity
 public class Project {
@@ -54,5 +55,21 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(id, project.id) &&
+                Objects.equals(name, project.name) &&
+                Objects.equals(clientName, project.clientName) &&
+                Objects.equals(description, project.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, clientName, description);
     }
 }

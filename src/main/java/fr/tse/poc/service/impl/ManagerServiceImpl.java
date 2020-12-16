@@ -26,4 +26,9 @@ public class ManagerServiceImpl implements ManagerService {
 		return this.managerRepository.findById(id).orElse(null);
 	}
 
+	public Manager createManager(String login, String password, String name, String firstname) {
+		Manager manager = new Manager(login,password,name,firstname);
+		managerRepository.save(manager);
+		return manager;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import fr.tse.poc.dao.ManagerRepository;
 import fr.tse.poc.dao.ProjectRepository;
 import fr.tse.poc.dao.TimeRepository;
 import fr.tse.poc.dao.UserRepository;
+import fr.tse.poc.domain.Manager;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
@@ -29,7 +32,38 @@ public class UserServiceTest {
     private @Autowired UserRepository userRepository;
     private @Autowired ProjectRepository projectRepository;
     private @Autowired TimeRepository timeRepository;
+    
+    @Autowired
+	ManagerService managerService;
+    
+    @Autowired
+	ManagerRepository managerRepository;
 
+    @Test
+    public void testCreateUser(){
+    	int prevSize = userRepository.findAll().size();
+        User testUser = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest");
+        Assert.assertEquals(prevSize+1, userRepository.findAll().size());
+        userRepository.delete(testUser);
+        Assert.assertEquals(prevSize, userRepository.findAll().size());
+    }
+    
+    @Test
+    public void testCreateUserAsManager(){
+    	int prevSizeUserRepo = userService.findAllUsers().size();
+		Manager manager = managerService.findAllManagers().iterator().next();
+    	int prevSizeUsers = manager.getUsers().size();
+        User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager);
+        Assert.assertEquals(prevSizeUserRepo+1, userService.findAllUsers().size());
+        Assert.assertEquals(prevSizeUsers+1, manager.getUsers().size());
+        Assert.assertEquals(manager, testUser.getManager());
+        manager.getUsers().remove(testUser);
+        managerRepository.save(manager);
+        userRepository.delete(testUser);
+        Assert.assertEquals(prevSizeUserRepo, userService.findAllUsers().size());
+        Assert.assertEquals(prevSizeUsers, manager.getUsers().size());
+    }
+    
     @Test
     @Transactional
     public void testCreateTime(){

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public Time createTime(User user, Project project, int time, Date date) {
+		user = userRepository.save(user);
+		project = projectRepository.save(project);
+		
 		Time ti = new Time(time, date);
 		ti.setUser(user);
 		ti.setProject(project);

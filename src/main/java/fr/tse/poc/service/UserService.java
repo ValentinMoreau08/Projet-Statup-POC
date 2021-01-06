@@ -15,4 +15,5 @@ public interface UserService {
 	public Time createTime(User user, Project project, int time, Date date);
 	public User findUserById(Long id);
 	public Time findTimeById(Long id);
+	public void changeRole(User user,Role role);
 }

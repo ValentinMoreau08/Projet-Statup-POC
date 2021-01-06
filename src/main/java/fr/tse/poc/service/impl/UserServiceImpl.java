@@ -65,6 +65,12 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	public void changeRole(User user,Role role){
+		user.setRole(role);
+		userRepository.save(user);
+	};
+
+	@Override
 	public Collection<User> findAllUsers() {
 		return userRepository.findAll();
 	}

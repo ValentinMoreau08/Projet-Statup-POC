@@ -87,4 +87,13 @@ public class UserServiceTest {
     	user.deleteTime(ti);
     	project.deleteTime(ti);
     }
+
+    @Test
+    @Transactional
+    public void testChangeRole(){
+        User testUser=userService.createUser("loginTest","passwordTest","nameTest","firstnameTest",roleRepository.findById(1L).get());
+        userService.changeRole(testUser,roleRepository.findById(2L).get());
+        Assertions.assertEquals(testUser.getRole(),roleRepository.findById(2L).get());
+        userRepository.delete(testUser);
+    }
 }

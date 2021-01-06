@@ -14,11 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fr.tse.poc.dao.ManagerRepository;
 import fr.tse.poc.dao.ProjectRepository;
+import fr.tse.poc.dao.RoleRepository;
 import fr.tse.poc.dao.TimeRepository;
 import fr.tse.poc.dao.UserRepository;
-import fr.tse.poc.domain.Manager;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
@@ -32,17 +31,12 @@ public class UserServiceTest {
     private @Autowired UserRepository userRepository;
     private @Autowired ProjectRepository projectRepository;
     private @Autowired TimeRepository timeRepository;
-    
-    @Autowired
-	ManagerService managerService;
-    
-    @Autowired
-	ManagerRepository managerRepository;
+    private @Autowired RoleRepository roleRepository;
 
     @Test
     public void testCreateUser(){
     	int prevSize = userRepository.findAll().size();
-        User testUser = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest");
+        User testUser = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(3L).orElse(null));
         Assert.assertEquals(prevSize+1, userRepository.findAll().size());
         userRepository.delete(testUser);
         Assert.assertEquals(prevSize, userRepository.findAll().size());
@@ -51,17 +45,17 @@ public class UserServiceTest {
     @Test
     public void testCreateUserAsManager(){
     	int prevSizeUserRepo = userService.findAllUsers().size();
-		Manager manager = managerService.findAllManagers().iterator().next();
-    	int prevSizeUsers = manager.getUsers().size();
-        User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager);
+		User manager = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(2L).orElse(null));
+    	int prevSizeUsers = manager.getManaged().size();
+        User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager, roleRepository.findById(3L).orElse(null));
         Assert.assertEquals(prevSizeUserRepo+1, userService.findAllUsers().size());
-        Assert.assertEquals(prevSizeUsers+1, manager.getUsers().size());
+        Assert.assertEquals(prevSizeUsers+1, manager.getManaged().size());
         Assert.assertEquals(manager, testUser.getManager());
-        manager.getUsers().remove(testUser);
-        managerRepository.save(manager);
+        manager.getManaged().remove(testUser);
+        userRepository.save(manager);
         userRepository.delete(testUser);
         Assert.assertEquals(prevSizeUserRepo, userService.findAllUsers().size());
-        Assert.assertEquals(prevSizeUsers, manager.getUsers().size());
+        Assert.assertEquals(prevSizeUsers, manager.getManaged().size());
     }
     
     @Test

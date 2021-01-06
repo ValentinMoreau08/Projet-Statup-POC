@@ -33,6 +33,7 @@ public class User {
 	
 	public User() {
 		times = new HashSet<Time>();
+		managed = new HashSet<User>();
 	}
 	
 	public User(String login, String password, String name, String firstname, Role role) {
@@ -42,6 +43,7 @@ public class User {
 		this.firstname = firstname;
 		this.role = role;
 		times = new HashSet<Time>();
+		managed = new HashSet<User>();
 	}
 
 	public String getLogin() {return login;}

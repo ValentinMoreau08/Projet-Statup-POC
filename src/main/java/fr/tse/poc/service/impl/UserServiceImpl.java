@@ -4,16 +4,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.tse.poc.dao.ProjectRepository;
 import fr.tse.poc.dao.RoleRepository;
 import fr.tse.poc.dao.TimeRepository;
 import fr.tse.poc.dao.UserRepository;
 import fr.tse.poc.domain.Project;
+import fr.tse.poc.domain.Role;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
 import fr.tse.poc.service.UserService;
@@ -27,19 +27,20 @@ public class UserServiceImpl implements UserService{
 	private @Autowired ProjectRepository projectRepository;
 	
 	@Override
-	public User createUser(String login, String password, String name, String firstname) {
-		User user = new User(login,password,name,firstname);
+	public User createUser(String login, String password, String name, String firstname, Role role) {
+		roleRepository.save(role);
+		User user = new User(login,password,name,firstname, role);
 		userRepository.save(user);
 		return user;
 	}
 
 	@Override
-	public User createUserAsManager(String login, String password, String name, String firstname, Manager manager) {
-		User user  = createUser(login, password, name, firstname);
+	@Transactional
+	public User createUserAsManager(String login, String password, String name, String firstname, User manager, Role role) {
+		manager = userRepository.save(manager);
+		User user  = createUser(login, password, name, firstname, role);
 		user.setManager(manager);
-		Set<User> users =  manager.getUsers();
-		users.add(user);
-		managerRepository.save(manager);
+		manager.addManaged(user);
 		userRepository.save(user);
 		return user;
 	}

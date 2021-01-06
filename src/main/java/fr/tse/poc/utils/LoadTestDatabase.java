@@ -4,6 +4,7 @@ import fr.tse.poc.dao.ProjectRepository;
 import fr.tse.poc.dao.RoleRepository;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
+import fr.tse.poc.utils.Constants;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -48,9 +49,9 @@ public class LoadTestDatabase {
 	}
 	
 	public void initRole(RoleRepository roleRepository) {
-		admin = new Role(1L, "Admin");
-		manager = new Role(2L, "Manager");
-		user = new Role(3L, "User");
+		admin = new Role(Constants.ROLE_ADMIN_ID, "Admin");
+		manager = new Role(Constants.ROLE_MANAGER_ID, "Manager");
+		user = new Role(Constants.ROLE_USER_ID, "User");
 		roleRepository.save(admin);
 		roleRepository.save(manager);
 		roleRepository.save(user);

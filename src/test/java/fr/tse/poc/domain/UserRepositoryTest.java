@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fr.tse.poc.dao.ManagerRepository;
+import fr.tse.poc.dao.RoleRepository;
 import fr.tse.poc.dao.UserRepository;
 
 @SpringBootTest
@@ -18,19 +18,17 @@ import fr.tse.poc.dao.UserRepository;
 @ActiveProfiles(profiles = "test")
 public class UserRepositoryTest {
 
-	
+	private @Autowired RoleRepository roleRepository;
 	private @Autowired UserRepository userRepository;
-	private @Autowired ManagerRepository managerRepository;
 	
 	@Test
-	public void saveAndDeleteManager() {
+	public void saveAndDeleteUser() {
+		Role userRole = roleRepository.findById(1L).orElse(null);
+		
 		List<User> users = userRepository.findAll();
 		int prevSize = users.size();
 		
-		Manager manager = new Manager("loginTest", "passwordTest", "nameTest", "firstnameTest");
-		manager = managerRepository.save(manager);
-		
-		User user = new User("loginTest", "passwordTest", "nameTest", "firstnameTest");
+		User user = new User("loginTest", "passwordTest", "nameTest", "firstnameTest", userRole);
 		user = userRepository.save(user);
 		
 		users = userRepository.findAll();
@@ -46,8 +44,6 @@ public class UserRepositoryTest {
 		users = userRepository.findAll();
 		Assertions.assertNotNull(users);
 		Assertions.assertEquals(prevSize, users.size());
-		
-		managerRepository.delete(manager);
 	}
 	
 }

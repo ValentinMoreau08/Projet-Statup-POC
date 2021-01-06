@@ -9,7 +9,7 @@ import fr.tse.poc.dao.ManagerRepository;
 import fr.tse.poc.domain.Manager;
 import fr.tse.poc.service.ManagerService;
 
-@Service
+
 public class ManagerServiceImpl implements ManagerService {
 	
 	@Autowired

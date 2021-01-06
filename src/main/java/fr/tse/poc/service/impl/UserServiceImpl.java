@@ -9,11 +9,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.tse.poc.dao.ManagerRepository;
 import fr.tse.poc.dao.ProjectRepository;
+import fr.tse.poc.dao.RoleRepository;
 import fr.tse.poc.dao.TimeRepository;
 import fr.tse.poc.dao.UserRepository;
-import fr.tse.poc.domain.Manager;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
@@ -22,8 +21,8 @@ import fr.tse.poc.service.UserService;
 @Service
 public class UserServiceImpl implements UserService{
 	
+	private @Autowired RoleRepository roleRepository;
 	private @Autowired UserRepository userRepository;
-	private @Autowired ManagerRepository managerRepository;
 	private @Autowired TimeRepository timeRepository;
 	private @Autowired ProjectRepository projectRepository;
 	

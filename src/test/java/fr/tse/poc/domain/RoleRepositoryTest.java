@@ -26,6 +26,7 @@ public class RoleRepositoryTest {
 		int prevSize = roles.size();
 		
 		Role role = new Role(4L, "RoleTest");
+		role = roleRepository.save(role);
 		
 		roles = roleRepository.findAll();
 		

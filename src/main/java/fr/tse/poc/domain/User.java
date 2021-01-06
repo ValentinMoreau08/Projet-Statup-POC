@@ -120,7 +120,7 @@ public class User {
 		if (managed == null) {
 			if (other.managed != null)
 				return false;
-		} else if (!managed.equals(other.managed))
+		} else if (managed.size() != other.managed.size())
 			return false;
 		if (manager == null) {
 			if (other.manager != null)
@@ -140,7 +140,7 @@ public class User {
 		if (times == null) {
 			if (other.times != null)
 				return false;
-		} else if (!times.equals(other.times))
+		} else if (times.size() != other.times.size())
 			return false;
 		return true;
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import fr.tse.poc.utils.Constants;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -90,10 +91,12 @@ public class UserServiceTest {
 
     @Test
     @Transactional
-    public void testChangeRole(){
-        User testUser=userService.createUser("loginTest","passwordTest","nameTest","firstnameTest",roleRepository.findById(1L).get());
-        userService.changeRole(testUser,roleRepository.findById(2L).get());
+    public void testChangeRoleAsAdmin(){
+        User testUser = userService.createUser("loginTest","passwordTest","nameTest","firstnameTest", roleRepository.findById(3L).get());
+        User admin = userService.createUser("loginTest","passwordTest","nameTest","firstnameTest", roleRepository.findById(1L).get());
+        userService.changeRoleAsAdmin(admin,testUser,roleRepository.findById(2L).get());
         Assertions.assertEquals(testUser.getRole(),roleRepository.findById(2L).get());
         userRepository.delete(testUser);
+        userRepository.delete(admin);
     }
 }

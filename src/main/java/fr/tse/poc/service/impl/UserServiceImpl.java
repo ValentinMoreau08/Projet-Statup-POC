@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
+import fr.tse.poc.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,8 +66,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void changeRole(User user,Role role){
-		if (user.getRole().equals(roleRepository.findById(1L))) {
+	public void changeRoleAsAdmin(User admin, User user,Role role){
+		if (admin.getRole().getId() == Constants.ROLE_ADMIN_ID) {
 			user.setRole(role);
 			userRepository.save(user);
 		}

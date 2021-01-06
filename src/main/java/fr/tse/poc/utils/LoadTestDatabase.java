@@ -42,9 +42,9 @@ public class LoadTestDatabase {
 	}
 	
 	public void clearDatabase(UserRepository userRepository, RoleRepository roleRepository, ProjectRepository projectRepository) {
-		roleRepository.deleteAll();
-		userRepository.deleteAll();
 		projectRepository.deleteAll();
+		userRepository.deleteAll();
+		roleRepository.deleteAll();
 	}
 	
 	public void initRole(RoleRepository roleRepository) {

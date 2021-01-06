@@ -44,9 +44,10 @@ public class UserServiceTest {
     
     @Test
     public void testCreateUserAsManager(){
-    	int prevSizeUserRepo = userService.findAllUsers().size();
 		User manager = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(2L).orElse(null));
-    	int prevSizeUsers = manager.getManaged().size();
+        userRepository.save(manager);
+    	int prevSizeUserRepo = userService.findAllUsers().size();
+		int prevSizeUsers = manager.getManaged().size();
         User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager, roleRepository.findById(3L).orElse(null));
         Assert.assertEquals(prevSizeUserRepo+1, userService.findAllUsers().size());
         Assert.assertEquals(prevSizeUsers+1, manager.getManaged().size());
@@ -56,6 +57,7 @@ public class UserServiceTest {
         userRepository.delete(testUser);
         Assert.assertEquals(prevSizeUserRepo, userService.findAllUsers().size());
         Assert.assertEquals(prevSizeUsers, manager.getManaged().size());
+        userRepository.delete(manager);
     }
     
     @Test

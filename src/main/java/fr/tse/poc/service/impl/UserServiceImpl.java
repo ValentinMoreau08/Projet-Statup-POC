@@ -37,10 +37,10 @@ public class UserServiceImpl implements UserService{
 	@Override
 	@Transactional
 	public User createUserAsManager(String login, String password, String name, String firstname, User manager, Role role) {
-		manager = userRepository.save(manager);
 		User user  = createUser(login, password, name, firstname, role);
 		user.setManager(manager);
 		manager.addManaged(user);
+		userRepository.save(manager);
 		userRepository.save(user);
 		return user;
 	}

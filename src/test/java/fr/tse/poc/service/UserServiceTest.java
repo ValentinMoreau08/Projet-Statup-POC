@@ -22,12 +22,12 @@ import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
 
-/*@SpringBootTest
+@SpringBootTest
 @RunWith(SpringRunner.class)
-@ActiveProfiles(profiles = "test")*/
+@ActiveProfiles(profiles = "test")
 public class UserServiceTest {
 
-    /*private @Autowired UserService userService;
+    private @Autowired UserService userService;
     private @Autowired UserRepository userRepository;
     private @Autowired ProjectRepository projectRepository;
     private @Autowired TimeRepository timeRepository;
@@ -86,5 +86,5 @@ public class UserServiceTest {
     	timeRepository.delete(ti);
     	user.deleteTime(ti);
     	project.deleteTime(ti);
-    }*/
+    }
 }

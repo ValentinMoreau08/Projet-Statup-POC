@@ -50,7 +50,7 @@ public class LoadTestDatabase {
 	public void initRole(RoleRepository roleRepository) {
 		admin = new Role(1L, "Admin");
 		manager = new Role(2L, "Manager");
-		user = new Role(2L, "User");
+		user = new Role(3L, "User");
 		roleRepository.save(admin);
 		roleRepository.save(manager);
 		roleRepository.save(user);

@@ -26,6 +26,21 @@ public class UserController {
 		return userService.findAllUsers();
 	}
 	
+	@GetMapping("/simple_users")
+	public Collection<User> findAllSimpleUsers(){
+		return userService.findAllSimpleUsers();
+	}
+	
+	@GetMapping("/managers")
+	public Collection<User> findAllManagers(){
+		return userService.findAllManagers();
+	}
+	
+	@GetMapping("/admins")
+	public Collection<User> findAllAdmins(){
+		return this.userService.findAllAdmins();
+	}
+	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 	// Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
 	@PostMapping("/users/{id}/times")
@@ -37,10 +52,7 @@ public class UserController {
 		return null;
 	}
 	
-	@GetMapping("/admins")
-	public Collection<User> findAllAdmins(){
-		return this.userService.findAllAdmins();
-	}
+
 	
 	@PostMapping("/users/{id}")
 	public User changeManagerOfUser(User user, User manager) {

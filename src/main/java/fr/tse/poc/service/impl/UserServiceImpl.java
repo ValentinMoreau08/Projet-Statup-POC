@@ -2,6 +2,7 @@ package fr.tse.poc.service.impl;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import fr.tse.poc.domain.Role;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
 import fr.tse.poc.service.UserService;
+import fr.tse.poc.utils.Constants;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -88,6 +90,45 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Time findTimeById(Long id) {
 		return this.timeRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public void changeManagerOfUser(User user, User manager) {
+		user.setManager(manager);
+		userRepository.save(user);
+	}
+
+	@Override
+	public Collection<User> findAllManagers() {
+		Collection<User> allUsers = userRepository.findAll();
+		Collection<User> managers = new HashSet<User>();
+		allUsers.forEach(user -> {
+			if(user.getRole().getId().equals(Constants.ROLE_MANAGER_ID))
+				managers.add(user);
+		});
+		return managers;
+	}
+
+	@Override
+	public Collection<User> findAllAdmins() {
+		Collection<User> allUsers = userRepository.findAll();
+		Collection<User> admins = new HashSet<User>();
+		allUsers.forEach(user -> {
+			if(user.getRole().getId().equals(Constants.ROLE_ADMIN_ID))
+				admins.add(user);
+		});
+		return admins;
+	}
+
+	@Override
+	public Collection<User> findAllSimpleUsers() {
+		Collection<User> allUsers = userRepository.findAll();
+		Collection<User> users = new HashSet<User>();
+		allUsers.forEach(user -> {
+			if(user.getRole().getId().equals(Constants.ROLE_USER_ID))
+				users.add(user);
+		});
+		return users;
 	}
 
 }

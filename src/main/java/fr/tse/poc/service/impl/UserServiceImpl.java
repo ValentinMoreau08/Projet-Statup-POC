@@ -18,6 +18,7 @@ import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.dto.CreateTimeDTO;
 import fr.tse.poc.service.UserService;
 import fr.tse.poc.utils.Constants;
 
@@ -50,20 +51,18 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public Time createTime(User user, Project project, int time, Date date) {
-		user = userRepository.save(user);
-		project = projectRepository.save(project);
+	public Time createTimeAsUser(CreateTimeDTO createTimeDTO, Long userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		Project project = projectRepository.findById(createTimeDTO.getProjectId()).orElse(null);
 		
-		Time ti = new Time(time, date);
+		Time ti = new Time(createTimeDTO.getTime(), createTimeDTO.getDate());
 		ti.setUser(user);
 		ti.setProject(project);
 		
+		timeRepository.save(ti);
+		
 		user.addTime(ti);
 		project.addTime(ti);
-		
-		ti = timeRepository.save(ti);
-		userRepository.save(user);
-		projectRepository.save(project);
 		return ti;
 	}
 

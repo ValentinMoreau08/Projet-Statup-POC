@@ -8,6 +8,7 @@ import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.dto.CreateTimeDTO;
 
 public interface UserService {
 	public User createUser(String login, String password, String name, String firstname, Role role);
@@ -17,7 +18,7 @@ public interface UserService {
 	public Collection<User> findAllManagers();
 	public Collection<User> findAllAdmins();
 	public Collection<User> findAllSimpleUsers();
-	public Time createTime(User user, Project project, int time, Date date);
+	public Time createTimeAsUser(CreateTimeDTO createTimeDTO, Long userId);
 	public User findUserById(Long id);
 	public Time findTimeById(Long id);
   

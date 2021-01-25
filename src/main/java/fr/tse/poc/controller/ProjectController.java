@@ -32,7 +32,7 @@ public class ProjectController {
     // Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
 
     @PostMapping("/projects")
-    public Project createProject(@RequestBody String name, String clientName, String description){
-        return this.projectService.createProject(name, clientName, description);
+    public Project createProject(@RequestBody Project project){
+        return this.projectService.createProject(project);
     }
 }

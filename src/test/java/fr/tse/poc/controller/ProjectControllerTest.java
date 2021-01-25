@@ -35,7 +35,7 @@ public class ProjectControllerTest extends ControllerTest {
     public void createProjectTest() throws Exception{
 
         Project project = new Project("project2","client2","description2");
-
+        
         ObjectMapper mapper = new ObjectMapper();
         byte[] projectAsBytes = mapper.writeValueAsBytes(project);
 

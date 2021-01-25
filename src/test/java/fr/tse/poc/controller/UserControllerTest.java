@@ -40,8 +40,7 @@ import fr.tse.poc.service.UserService;
 @ActiveProfiles(profiles = "test")
 public class UserControllerTest extends ControllerTest{
 
-	@Autowired
-	private UserService userService;
+
 	private @Autowired UserService userService;
 	private @Autowired TimeRepository timeRepository;
 	private @Autowired ProjectRepository projectRepository;

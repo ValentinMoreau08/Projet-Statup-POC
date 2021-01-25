@@ -19,6 +19,7 @@ public interface UserService {
 	public Time createTime(User user, Project project, int time, Date date);
 	public User findUserById(Long id);
 	public Time findTimeById(Long id);
-	public void changeRole(User user,Role role);
+  
 	public void changeManagerOfUser(User user, User manager);
+	public void changeRoleAsAdmin(User admin, User user,Role role);
 }

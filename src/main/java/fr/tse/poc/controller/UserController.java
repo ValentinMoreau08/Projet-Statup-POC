@@ -54,12 +54,12 @@ public class UserController {
 		return userService.createTimeAsUser(createTimeDTO, id);
 	}
 	
-	@PatchMapping("/users/{id_manager}/{id_user}/{id_admin}")
+	@PatchMapping("/users/{id_admin}/{id_user}/{id_manager}")
 	public User addUserToManager(@PathVariable Long id_user,@PathVariable Long id_manager,@PathVariable Long id_admin) {
 		User user = userService.findUserById(id_user);
 		User manager = userService.findUserById(id_manager);
 		User admin = userService.findUserById(id_admin);
-		return userService.addUserToManager(user, manager, admin);
+		return userService.addUserToManager(admin, user, manager);
 	}
 	
 

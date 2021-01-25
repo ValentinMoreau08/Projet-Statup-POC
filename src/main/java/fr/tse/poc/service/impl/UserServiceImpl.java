@@ -170,7 +170,6 @@ public class UserServiceImpl implements UserService{
 				userRepository.save(manager);
 			}
 		}
-		userRepository.save(user);
 		return user;
 	}
 	

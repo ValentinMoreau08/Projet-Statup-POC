@@ -22,6 +22,7 @@ import fr.tse.poc.dao.UserRepository;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.dto.CreateTimeDTO;
 import fr.tse.poc.utils.Constants;
 
 @SpringBootTest
@@ -64,20 +65,24 @@ public class UserServiceTest {
     
     @Test
     @Transactional
-    public void testCreateTime(){
+    public void testCreateTimeAsUser(){
     	User user = userRepository.findAll().get(0);
     	Project project = projectRepository.findAll().get(0);
     	int tim = 3;
     	Date date = new Date();
+    	CreateTimeDTO createTimeDTO = new CreateTimeDTO(tim, date, project.getId());
     	
     	List<Time> times = timeRepository.findAll();
     	int prevSize = times.size();
     	
-    	Time ti = userService.createTime(user, project, tim, date);
+    	
+    	Time ti = userService.createTimeAsUser(createTimeDTO, user.getId());
     	
     	times = timeRepository.findAll();
     	Assertions.assertEquals(prevSize + 1, times.size());
-    	Assertions.assertTrue(times.contains(ti));
+    	
+    	Time newTi = timeRepository.findById(ti.getId()).orElse(null);
+    	Assertions.assertEquals(newTi, ti);
     	
     	User updatedUser = userRepository.findById(user.getId()).orElse(null);
     	Project updatedProject = projectRepository.findById(project.getId()).orElse(null);

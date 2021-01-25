@@ -2,6 +2,8 @@ package fr.tse.poc.controller;
 
 import java.util.Collection;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.dto.CreateTimeDTO;
 import fr.tse.poc.service.UserService;
 
 @RestController
@@ -42,18 +45,10 @@ public class UserController {
 		return this.userService.findAllAdmins();
 	}
 	
-	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
-	// Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
 	@PostMapping("/users/{id}/times")
-	public Time createTime(@RequestBody Time time, @PathVariable Long id) {
-		/*User user = this.userService.findUserById(id);
-		System.out.println("Id is = "+id);
-		Project project = time.getProject();
-		return userService.createTime(user, project, time.getTime(), time.getDate());*/
-		return null;
+	public Time createTimeAsUser(@Valid @RequestBody CreateTimeDTO createTimeDTO, @PathVariable Long id) {
+		return userService.createTimeAsUser(createTimeDTO, id);
 	}
-	
-
 	
 	@PatchMapping("/users/{id}")
 	public User changeManagerOfUser(User user, User manager) {

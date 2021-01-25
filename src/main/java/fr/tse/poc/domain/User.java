@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 public class User {
 
@@ -19,12 +21,15 @@ public class User {
 	private String name;
 	private String firstname;
 	
+	@JsonIgnoreProperties("managed")
 	@ManyToOne
 	private User manager;
 	
+	@JsonIgnoreProperties("manager")
 	@OneToMany(mappedBy="manager", fetch=FetchType.EAGER)
 	private Set<User> managed;
 	
+	@JsonIgnoreProperties("user")
 	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
 	private Set<Time> times;
 	

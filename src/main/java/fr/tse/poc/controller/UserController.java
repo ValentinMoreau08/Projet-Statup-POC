@@ -68,20 +68,6 @@ public class UserController {
 	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 
-	@GetMapping("/simple_users")
-	public Collection<User> findAllSimpleUsers() {
-		return userService.findAllSimpleUsers();
-	}
-
-	@GetMapping("/managers")
-	public Collection<User> findAllManagers() {
-		return userService.findAllManagers();
-	}
-
-	@GetMapping("/admins")
-	public Collection<User> findAllAdmins() {
-		return this.userService.findAllAdmins();
-	}
 
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in
 	// Time, et faire passer cet objet directement dans la couche service comme vu
@@ -99,12 +85,6 @@ public class UserController {
 		User manager = userService.findUserById(id_manager);
 		User admin = userService.findUserById(id_admin);
 		return userService.addUserToManager(admin, user, manager);
-	}
-	
-
-	@PatchMapping("/users/{id}")
-	public User changeManagerOfUser(User user, User manager) {
-		return this.changeManagerOfUser(user, manager);
 	}
 
 	@PatchMapping("/users/{id}")

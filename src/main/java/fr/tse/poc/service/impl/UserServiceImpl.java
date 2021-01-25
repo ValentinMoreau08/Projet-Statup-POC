@@ -2,6 +2,7 @@ package fr.tse.poc.service.impl;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import fr.tse.poc.utils.Constants;
@@ -17,7 +18,9 @@ import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.dto.CreateTimeDTO;
 import fr.tse.poc.service.UserService;
+import fr.tse.poc.utils.Constants;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -48,20 +51,18 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public Time createTime(User user, Project project, int time, Date date) {
-		user = userRepository.save(user);
-		project = projectRepository.save(project);
+	public Time createTimeAsUser(CreateTimeDTO createTimeDTO, Long userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		Project project = projectRepository.findById(createTimeDTO.getProjectId()).orElse(null);
 		
-		Time ti = new Time(time, date);
+		Time ti = new Time(createTimeDTO.getTime(), createTimeDTO.getDate());
 		ti.setUser(user);
 		ti.setProject(project);
 		
+		timeRepository.save(ti);
+		
 		user.addTime(ti);
 		project.addTime(ti);
-		
-		ti = timeRepository.save(ti);
-		userRepository.save(user);
-		projectRepository.save(project);
 		return ti;
 	}
 
@@ -90,5 +91,90 @@ public class UserServiceImpl implements UserService{
 	public Time findTimeById(Long id) {
 		return this.timeRepository.findById(id).orElse(null);
 	}
+
+	@Override
+	public void changeManagerOfUser(User user, User manager) {
+		user.setManager(manager);
+		userRepository.save(user);
+	}
+
+	@Override
+	public Collection<User> findAllManagers() {
+		Collection<User> allUsers = userRepository.findAll();
+		Collection<User> managers = new HashSet<User>();
+		allUsers.forEach(user -> {
+			if(user.getRole().getId().equals(Constants.ROLE_MANAGER_ID))
+				managers.add(user);
+		});
+		return managers;
+	}
+
+	@Override
+	public Collection<User> findAllAdmins() {
+		Collection<User> allUsers = userRepository.findAll();
+		Collection<User> admins = new HashSet<User>();
+		allUsers.forEach(user -> {
+			if(user.getRole().getId().equals(Constants.ROLE_ADMIN_ID))
+				admins.add(user);
+		});
+		return admins;
+	}
+
+	@Override
+	public Collection<User> findAllSimpleUsers() {
+		Collection<User> allUsers = userRepository.findAll();
+		Collection<User> users = new HashSet<User>();
+		allUsers.forEach(user -> {
+			if(user.getRole().getId().equals(Constants.ROLE_USER_ID))
+				users.add(user);
+		});
+		return users;
+	}
+
+	@Override
+	public Set<Time> getTimesOfUser(User user, User manager) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+			return user.getTimes();
+		else
+			return null;
+	}
+
+	@Override
+	public  Set<Time> getTimesOfUserInProject(User user,User manager, Project project) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+		{
+		Collection<Time> allTimes = timeRepository.findAll();
+		Set<Time> timesOfProjectOfUser = new HashSet<Time>();
+		allTimes.forEach(time -> {
+			if(time.getProject().equals(project) & time.getUser().equals(user))
+				timesOfProjectOfUser.add(time);
+		});
+		return timesOfProjectOfUser;
+		}
+		else
+			return null;
+	}
+
+	@Override
+	@Transactional
+	public User addUserToManager(User admin, User user, User manager) {
+		if(admin.getRole().getId() == Constants.ROLE_ADMIN_ID)
+		{
+			if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+			{
+				Set<User> managed = manager.getManaged();
+				managed.add(user);
+				manager.setManaged(managed);
+				user.setManager(manager);
+				userRepository.save(user);
+				userRepository.save(manager);
+			}
+		}
+		userRepository.save(user);
+		return user;
+	}
+	
+
+
 
 }

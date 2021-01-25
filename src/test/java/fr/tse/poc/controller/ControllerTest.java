@@ -7,5 +7,4 @@ public class ControllerTest {
 
     @Autowired
     protected MockMvc mvc;
-
 }

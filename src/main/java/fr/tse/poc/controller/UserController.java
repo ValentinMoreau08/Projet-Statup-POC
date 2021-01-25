@@ -1,40 +1,112 @@
 package fr.tse.poc.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Collection;
+import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
+import org.apache.poi.wp.usermodel.HeaderFooterType;
+import org.apache.poi.xwpf.usermodel.Document;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
 import fr.tse.poc.service.UserService;
 
-//@RestController
-//@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.PATCH})
+@RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.POST,
+		RequestMethod.OPTIONS, RequestMethod.PATCH })
 public class UserController {
 
 	private @Autowired UserService userService;
-	
+
 	@GetMapping("/users")
-	public Collection<User> findAllUsers(){
+	public Collection<User> findAllUsers() {
 		return userService.findAllUsers();
 	}
 	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
+
+	@GetMapping("/simple_users")
+	public Collection<User> findAllSimpleUsers() {
+		return userService.findAllSimpleUsers();
+	}
+
+	@GetMapping("/managers")
+	public Collection<User> findAllManagers() {
+		return userService.findAllManagers();
+	}
+
+	@GetMapping("/admins")
+	public Collection<User> findAllAdmins() {
+		return this.userService.findAllAdmins();
+	}
+
+	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in
+	// Time, et faire passer cet objet directement dans la couche service comme vu
+	// en cours
 	// Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
 	@PostMapping("/users/{id}/times")
 	public Time createTime(@RequestBody Time time, @PathVariable Long id) {
-		/*User user = this.userService.findUserById(id);
-		System.out.println("Id is = "+id);
-		Project project = time.getProject();
-		return userService.createTime(user, project, time.getTime(), time.getDate());*/
+		/*
+		 * User user = this.userService.findUserById(id);
+		 * System.out.println("Id is = "+id); Project project = time.getProject();
+		 * return userService.createTime(user, project, time.getTime(), time.getDate());
+		 */
 		return null;
 	}
-	
+
+	@PatchMapping("/users/{id}")
+	public User changeManagerOfUser(User user, User manager) {
+		return this.changeManagerOfUser(user, manager);
+	}
+
+	@GetMapping(value = "/users/{id}/exportDoc", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+	public void getTimesForUser(@PathVariable Long id) throws IOException {
+		User user = userService.findUserById(id);
+		Set<Time> times = user.getTimes();
+		XWPFDocument document = new XWPFDocument();
+		XWPFParagraph tmpParagraph = document.createParagraph();
+		XWPFRun tmpRun = tmpParagraph.createRun();
+		tmpRun.setText("Nom : " + user.getName());
+		tmpRun.setFontSize(18);
+		tmpRun.addBreak();
+		tmpRun.addBreak();
+		tmpRun.setText("Temps");
+		tmpRun.addBreak();
+		tmpRun.addBreak();
+		for (Time time : times) {
+			tmpRun.setText(time.getDate() + " : "
+					+ String.valueOf(time.getTime() + "h - Project : " + time.getProject().getName()));
+			tmpRun.addBreak();
+		}
+		FileOutputStream out = new FileOutputStream(new File("./test.docx"));
+		document.write(out);
+		document.close();
+		out.close();
+	}
 }

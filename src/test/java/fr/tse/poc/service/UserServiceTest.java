@@ -22,6 +22,7 @@ import fr.tse.poc.dao.UserRepository;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.utils.Constants;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -99,4 +100,43 @@ public class UserServiceTest {
         userRepository.delete(testUser);
         userRepository.delete(admin);
     }
+    
+	@Test
+	public void testChangeMangerOfUser() {
+		User manager1 = userService.createUser("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+		User manager2 = userService.createUser("loginManager2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+        User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager1, roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+        userService.changeManagerOfUser(testUser, manager2);
+        Assertions.assertEquals(manager2,testUser.getManager());
+        userRepository.delete(manager1);
+        userRepository.delete(testUser);
+        userRepository.delete(manager2);
+	}
+	
+	@Test
+	public void findAllManagersTest() {
+		User manager1 = userService.createUser("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+		User manager2 = userService.createUser("loginManager2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+        Assert.assertEquals(3, userService.findAllManagers().size());
+        userRepository.delete(manager1);
+        userRepository.delete(manager2);
+	}
+	
+	@Test
+	public void findAllAdminsTest() {
+		User admin1 = userService.createUser("loginAdmin1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_ADMIN_ID).orElse(null));
+		User admin2 = userService.createUser("loginAdmin2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_ADMIN_ID).orElse(null));
+        Assert.assertEquals(3, userService.findAllAdmins().size());
+        userRepository.delete(admin1);
+        userRepository.delete(admin2);
+	}
+	
+	@Test
+	public void findAllSimpleUsersTest() {
+		User user1 = userService.createUser("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+		User user2 = userService.createUser("loginUser2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+        Assert.assertEquals(3, userService.findAllSimpleUsers().size());
+        userRepository.delete(user1);
+        userRepository.delete(user2);
+	}
 }

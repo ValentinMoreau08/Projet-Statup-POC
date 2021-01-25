@@ -78,7 +78,7 @@ public class UserControllerTest extends ControllerTest{
 		Long user_id = this.userService.findAllSimpleUsers().iterator().next().getId();
 		Long manager_id = this.userService.findAllManagers().iterator().next().getId();
 		Long admin_id = this.userService.findAllAdmins().iterator().next().getId();		
-		mvc.perform(patch("/users/" + user_id + "/" + manager_id + "/" + admin_id)
+		mvc.perform(patch("/users/" + admin_id + "/" + user_id + "/" + manager_id)
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));

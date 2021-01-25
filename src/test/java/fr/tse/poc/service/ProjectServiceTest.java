@@ -31,7 +31,12 @@ public class ProjectServiceTest {
 
     @Test
     public void testCreateProject(){
-        Project testProject = projectService.createProject("test","test","test");
+        Project testProject = new Project();
+        testProject.setName("test");
+        testProject.setClientName("test");
+        testProject.setDescription("test");
+
+        projectService.createProject(testProject);
         Assert.assertEquals(2, projectService.findAllProjects().size());
         projectRepository.delete(testProject);
         Assert.assertEquals(1, projectService.findAllProjects().size());

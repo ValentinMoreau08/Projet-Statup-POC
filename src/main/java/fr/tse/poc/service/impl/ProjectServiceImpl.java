@@ -26,9 +26,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project createProject(String name, String clientName, String description) {
-        Project project = new Project(name, clientName, description);
-        projectRepository.save(project);
+    public Project createProject(Project project) {
+        Project newProject = new Project();
+        newProject.setClientName(project.getClientName());
+        newProject.setName(project.getName());
+        newProject.setDescription(project.getDescription());
+        projectRepository.save(newProject);
         return project;
     }
 

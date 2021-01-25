@@ -10,7 +10,7 @@ import java.util.Set;
 public interface ProjectService {
 
     public Collection<Project> findAllProjects();
-    public Project createProject(String name, String clientName, String description);
+    public Project createProject(Project project);
     public Project findProjectById(Long id);
     
 	public  Set<Time> getTimesOfProject(Project project, User manager);

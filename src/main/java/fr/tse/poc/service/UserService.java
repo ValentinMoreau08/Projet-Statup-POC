@@ -2,6 +2,7 @@ package fr.tse.poc.service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
@@ -23,4 +24,10 @@ public interface UserService {
   
 	public void changeManagerOfUser(User user, User manager);
 	public void changeRoleAsAdmin(User admin, User user,Role role);
+	
+	public  Set<Time> getTimesOfUser(User user, User manager);
+	public  Set<Time> getTimesOfUserInProject(User user, User manager,Project project);
+	
+	public User addUserToManager(User admin, User user, User manager);
+	
 }

@@ -131,4 +131,50 @@ public class UserServiceImpl implements UserService{
 		return users;
 	}
 
+	@Override
+	public Set<Time> getTimesOfUser(User user, User manager) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+			return user.getTimes();
+		else
+			return null;
+	}
+
+	@Override
+	public  Set<Time> getTimesOfUserInProject(User user,User manager, Project project) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+		{
+		Collection<Time> allTimes = timeRepository.findAll();
+		Set<Time> timesOfProjectOfUser = new HashSet<Time>();
+		allTimes.forEach(time -> {
+			if(time.getProject().equals(project) & time.getUser().equals(user))
+				timesOfProjectOfUser.add(time);
+		});
+		return timesOfProjectOfUser;
+		}
+		else
+			return null;
+	}
+
+	@Override
+	@Transactional
+	public User addUserToManager(User admin, User user, User manager) {
+		if(admin.getRole().getId() == Constants.ROLE_ADMIN_ID)
+		{
+			if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+			{
+				Set<User> managed = manager.getManaged();
+				managed.add(user);
+				manager.setManaged(managed);
+				user.setManager(manager);
+				userRepository.save(user);
+				userRepository.save(manager);
+			}
+		}
+		userRepository.save(user);
+		return user;
+	}
+	
+
+
+
 }

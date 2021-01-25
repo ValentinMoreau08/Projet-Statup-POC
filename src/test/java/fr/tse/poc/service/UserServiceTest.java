@@ -2,6 +2,7 @@ package fr.tse.poc.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -122,7 +123,7 @@ public class UserServiceTest {
 	public void findAllManagersTest() {
 		User manager1 = userService.createUser("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
 		User manager2 = userService.createUser("loginManager2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
-        Assert.assertEquals(3, userService.findAllManagers().size());
+        Assert.assertEquals(4, userService.findAllManagers().size());
         userRepository.delete(manager1);
         userRepository.delete(manager2);
 	}
@@ -140,8 +141,26 @@ public class UserServiceTest {
 	public void findAllSimpleUsersTest() {
 		User user1 = userService.createUser("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
 		User user2 = userService.createUser("loginUser2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
-        Assert.assertEquals(3, userService.findAllSimpleUsers().size());
+        Assert.assertEquals(4, userService.findAllSimpleUsers().size());
         userRepository.delete(user1);
         userRepository.delete(user2);
 	}
+	
+	@Test
+	public void addUserToManagerTest() {
+		User admin1 = new User("loginAdmin1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_ADMIN_ID).orElse(null));
+		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+		userService.addUserToManager(admin1, user1, manager1);
+		Assert.assertEquals(user1.getManager(), manager1);
+
+		}
+	
+//	@Test
+//	public void getTimesOfUser() {
+//		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+//		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+//		Set<Time> user1Times = user1.getTimes();
+//		Assert.assertEquals(user1Times, userService.getTimesOfUser(user1, manager1));
+//	}
 }

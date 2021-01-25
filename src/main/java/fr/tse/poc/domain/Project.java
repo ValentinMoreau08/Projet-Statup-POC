@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 public class Project {
 
@@ -17,6 +19,7 @@ public class Project {
     private String clientName;
     private String description;
     
+    @JsonIgnoreProperties("project")
     @OneToMany(mappedBy="project", fetch=FetchType.EAGER)
 	private Set<Time> times;
 

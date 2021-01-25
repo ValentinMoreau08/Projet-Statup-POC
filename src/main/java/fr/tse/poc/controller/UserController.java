@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -21,6 +20,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +36,11 @@ import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
+import fr.tse.poc.dto.CreateTimeDTO;
 import fr.tse.poc.service.UserService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600, methods = { RequestMethod.GET, RequestMethod.POST,
-		RequestMethod.OPTIONS, RequestMethod.PATCH })
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.PATCH})
 public class UserController {
 
 	private @Autowired UserService userService;
@@ -48,6 +49,22 @@ public class UserController {
 	public Collection<User> findAllUsers() {
 		return userService.findAllUsers();
 	}
+	
+	@GetMapping("/simple_users")
+	public Collection<User> findAllSimpleUsers(){
+		return userService.findAllSimpleUsers();
+	}
+	
+	@GetMapping("/managers")
+	public Collection<User> findAllManagers(){
+		return userService.findAllManagers();
+	}
+	
+	@GetMapping("/admins")
+	public Collection<User> findAllAdmins(){
+		return this.userService.findAllAdmins();
+	}
+	
 	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 
@@ -70,14 +87,24 @@ public class UserController {
 	// Time, et faire passer cet objet directement dans la couche service comme vu
 	// en cours
 	// Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
+
 	@PostMapping("/users/{id}/times")
-	public Time createTime(@RequestBody Time time, @PathVariable Long id) {
-		/*
-		 * User user = this.userService.findUserById(id);
-		 * System.out.println("Id is = "+id); Project project = time.getProject();
-		 * return userService.createTime(user, project, time.getTime(), time.getDate());
-		 */
-		return null;
+	public Time createTimeAsUser(@Valid @RequestBody CreateTimeDTO createTimeDTO, @PathVariable Long id) {
+		return userService.createTimeAsUser(createTimeDTO, id);
+	}
+	
+	@PatchMapping("/users/{id_admin}/{id_user}/{id_manager}")
+	public User addUserToManager(@PathVariable Long id_user,@PathVariable Long id_manager,@PathVariable Long id_admin) {
+		User user = userService.findUserById(id_user);
+		User manager = userService.findUserById(id_manager);
+		User admin = userService.findUserById(id_admin);
+		return userService.addUserToManager(admin, user, manager);
+	}
+	
+
+	@PatchMapping("/users/{id}")
+	public User changeManagerOfUser(User user, User manager) {
+		return this.changeManagerOfUser(user, manager);
 	}
 
 	@PatchMapping("/users/{id}")

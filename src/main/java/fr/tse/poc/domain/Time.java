@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
 @Entity
@@ -16,7 +18,10 @@ public class Time {
     private int time;
     private @Temporal(TemporalType.TIMESTAMP) Date date;
     
+    @JsonIgnoreProperties("times")
     private @ManyToOne User user;
+    
+    @JsonIgnoreProperties("times")
     private @ManyToOne Project project;
 
     public Time() {}

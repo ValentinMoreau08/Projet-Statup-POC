@@ -2,6 +2,7 @@ package fr.tse.poc.utils;
 
 import fr.tse.poc.dao.ProjectRepository;
 import fr.tse.poc.dao.RoleRepository;
+import fr.tse.poc.dao.TimeRepository;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
 import fr.tse.poc.utils.Constants;
@@ -30,11 +31,11 @@ public class LoadTestDatabase {
 	
 	@Bean	// Method that will create beam disponible in spring environnement
 	@Profile("test")
-	CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository, ProjectRepository projectRepository) {
+	CommandLineRunner initDatabase(UserRepository userRepository, RoleRepository roleRepository, ProjectRepository projectRepository, TimeRepository timeRepository) {
 		return new CommandLineRunner() {
 			@Override
 			public void run(String... args) throws Exception {
-				clearDatabase(userRepository, roleRepository, projectRepository);
+				clearDatabase(userRepository, roleRepository, projectRepository, timeRepository);
 				initRole(roleRepository);
 				initUsers(userRepository);
 				initProjects(projectRepository);
@@ -42,10 +43,11 @@ public class LoadTestDatabase {
 		};
 	}
 	
-	public void clearDatabase(UserRepository userRepository, RoleRepository roleRepository, ProjectRepository projectRepository) {
-		projectRepository.deleteAll();
+	public void clearDatabase(UserRepository userRepository, RoleRepository roleRepository, ProjectRepository projectRepository, TimeRepository timeRepository) {
+		timeRepository.deleteAll();
 		userRepository.deleteAll();
 		roleRepository.deleteAll();
+		projectRepository.deleteAll();
 	}
 	
 	public void initRole(RoleRepository roleRepository) {

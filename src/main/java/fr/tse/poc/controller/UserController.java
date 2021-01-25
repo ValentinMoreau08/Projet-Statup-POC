@@ -42,6 +42,7 @@ public class UserController {
 		return this.userService.findAllAdmins();
 	}
 	
+	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 	// Car le contrôler n'a pas d'intelligence il ne sert qu'à faire le lien !
 	@PostMapping("/users/{id}/times")
@@ -53,7 +54,13 @@ public class UserController {
 		return null;
 	}
 	
-
+	@PatchMapping("/users/{id_manager}/{id_user}/{id_admin}")
+	public User addUserToManager(@PathVariable Long id_user,@PathVariable Long id_manager,@PathVariable Long id_admin) {
+		User user = userService.findUserById(id_user);
+		User manager = userService.findUserById(id_manager);
+		User admin = userService.findUserById(id_admin);
+		return userService.addUserToManager(user, manager, admin);
+	}
 	
 	@PatchMapping("/users/{id}")
 	public User changeManagerOfUser(User user, User manager) {

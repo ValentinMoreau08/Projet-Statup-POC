@@ -8,9 +8,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -31,6 +33,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
@@ -91,7 +96,14 @@ public class UserController {
 	public User changeManagerOfUser(User user, User manager) {
 		return this.changeManagerOfUser(user, manager);
 	}
-
+	
+	@GetMapping("users/managed_times/{id}")
+	public Map<Long, Integer> getTimesOfMyUsers(@PathVariable Long id) {
+		User manager = userService.findUserById(id);
+		return  userService.getTimeOfMyUsers(manager);
+	}
+	
+	
 	@GetMapping(value = "/users/{id}/exportDoc", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 	public void getTimesForUser(@PathVariable Long id) throws IOException {
 		User user = userService.findUserById(id);

@@ -2,7 +2,9 @@ package fr.tse.poc.service.impl;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import fr.tse.poc.utils.Constants;
@@ -171,6 +173,25 @@ public class UserServiceImpl implements UserService{
 			}
 		}
 		return user;
+	}
+
+	@Override
+	public Map<Long, Integer > getTimeOfMyUsers(User manager) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+			{Collection<User> managed = manager.getManaged();
+			Map<Long, Integer> timesOfUsers = new HashMap<Long, Integer>();
+			managed.forEach(user -> {
+				Integer userTime = 0 ;
+				for(Time i : user.getTimes() ) {
+					userTime += i.getTime();
+				}
+				timesOfUsers.put(user.getId(), userTime);
+			});
+			return timesOfUsers;
+			}
+		else {
+			return null;
+		}
 	}
 	
 

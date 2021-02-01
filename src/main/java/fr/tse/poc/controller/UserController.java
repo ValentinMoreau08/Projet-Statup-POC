@@ -74,10 +74,18 @@ public class UserController {
 		return this.userService.findAllAdmins();
 	}
 	
+	@GetMapping("/managers/{id}/managed")
+	public Collection<User> findManagedByManager(@PathVariable Long id){
+		User manager = userService.findUserById(id);
+		return userService.findManagedByManager(manager);
+	}
+	
 	@GetMapping("/times")
 	public Collection<Time> findAllTimess(){
 		return this.userService.findAllTimes();
 	}
+	
+	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 
 

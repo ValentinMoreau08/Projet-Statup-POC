@@ -198,6 +198,16 @@ public class UserServiceImpl implements UserService{
 	public Collection<Time> findAllTimes() {
 		return timeRepository.findAll();
 	}
+
+	@Override
+	public Collection<User> findManagedByManager(User manager) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID) {
+			Collection<User> managed = manager.getManaged();
+			return managed;
+		}else {
+			return null;
+		}
+	}
 	
 
 

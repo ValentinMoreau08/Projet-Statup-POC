@@ -133,4 +133,15 @@ public class UserControllerTest extends ControllerTest{
 				.andExpect(status().isBadRequest());
 		
 	}
+
+//	@Test
+//	public void changeRoleAsAdmin() throws Exception {
+//		Long user_id = this.userService.findAllUsers().iterator().next().getId();
+//		Long role_id = this.userService.findAllRoles().iterator().next().getId();
+//
+//		mvc.perform(patch("/users/" + "roles" + "/" + user_id + "/" + role_id)
+//				.contentType(MediaType.APPLICATION_JSON))
+//				.andExpect(status().isOk())
+//				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+//	}
 }

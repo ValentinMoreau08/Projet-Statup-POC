@@ -163,4 +163,9 @@ public class UserServiceTest {
 		Set<Time> user1Times = user1.getTimes();
 		Assert.assertEquals(user1Times, userService.getTimesOfUser(user1, manager1));
 	}
+
+	@Test
+	public void findAllRoles() {
+		Assert.assertEquals(3, userService.findAllRoles().size());
+	}
 }

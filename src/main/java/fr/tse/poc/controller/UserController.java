@@ -157,4 +157,11 @@ public class UserController {
 		document.close();
 		out.close();
 	}
+	
+	// Export .docx des temps des managed
+	@GetMapping("/managers/managed_times/{id}/exportdoc")
+	public void exportTimesManaged(@PathVariable Long id) throws IOException {
+		User manager = userService.findUserById(id);
+		userService.exportTimesManaged(manager);
+	}
 }

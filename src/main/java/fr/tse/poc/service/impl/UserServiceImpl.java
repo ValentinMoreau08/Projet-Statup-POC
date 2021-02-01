@@ -1,5 +1,9 @@
 package fr.tse.poc.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +12,10 @@ import java.util.Map;
 import java.util.Set;
 
 import fr.tse.poc.utils.Constants;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -207,6 +215,49 @@ public class UserServiceImpl implements UserService{
 		}else {
 			return null;
 		}
+	}
+
+	@Override
+	public void exportTimesManaged(User manager) {
+		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID) {
+			Collection<User> managed = manager.getManaged();
+			XWPFDocument document = new XWPFDocument();
+			XWPFParagraph tmpParagraph = document.createParagraph();
+			XWPFRun tmpRun = tmpParagraph.createRun();
+			tmpRun.setText("Manager : " + manager.getName());
+			tmpRun.addBreak();
+			tmpRun.addBreak();
+			for (User user : managed) {
+				Set<Time> times = user.getTimes();
+				tmpRun.setText("Nom : " + user.getName());
+				tmpRun.setFontSize(18);
+				tmpRun.addBreak();
+				tmpRun.addBreak();
+				tmpRun.setText("Temps");
+				tmpRun.addBreak();
+				for (Time time : times) {
+					tmpRun.setText(time.getDate() + " : "
+							+ String.valueOf(time.getTime() + "h - Project : " + time.getProject().getName()));
+					tmpRun.addBreak();
+				}
+
+				tmpRun.addBreak();
+				tmpRun.addBreak();
+				tmpRun.addBreak();
+			}
+			FileOutputStream out;
+			try {
+				out = new FileOutputStream(new File("./test.docx"));
+				document.write(out);
+				document.close();
+				out.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}	
 	}
 	
 

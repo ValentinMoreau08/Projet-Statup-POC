@@ -1,25 +1,15 @@
 package fr.tse.poc.controller;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections4.map.HashedMap;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.util.Units;
-import org.apache.poi.wp.usermodel.HeaderFooterType;
-import org.apache.poi.xwpf.usermodel.Document;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import fr.tse.poc.dao.RoleRepository;
+import fr.tse.poc.domain.Role;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import javax.validation.Valid;
@@ -34,11 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
-import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
@@ -52,6 +37,8 @@ public class UserController {
 
 	private @Autowired UserService userService;
 	private @Autowired ProjectService projectService;
+	private @Autowired
+	RoleRepository roleRepository;
 
 
 	@GetMapping("/users")
@@ -148,5 +135,14 @@ public class UserController {
 		document.write(out);
 		document.close();
 		out.close();
+	}
+
+	@PatchMapping("/users/roles/{id_admin}/{id_user}/{id_role}")
+	public User changeRoleAsAdmin(@PathVariable Long id_admin, @PathVariable Long id_user, @PathVariable Long id_role){
+		User user = userService.findUserById(id_user);
+		User admin = userService.findUserById(id_admin);
+		Role role = roleRepository.findById(id_role).get();
+		userService.changeRoleAsAdmin(admin, user, role);
+		return user;
 	}
 }

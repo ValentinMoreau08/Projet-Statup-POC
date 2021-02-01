@@ -32,5 +32,7 @@ public interface UserService {
 	public Set<Time> getTimesOfUserInProject(User user, User manager,Project project);
 	
 	public User addUserToManager(User admin, User user, User manager);
+	public Collection<Role> findAllRoles();
+	public Role findRoleById(Long id);
 	
 }

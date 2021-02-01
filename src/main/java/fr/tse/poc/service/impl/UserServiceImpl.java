@@ -69,13 +69,13 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void changeRoleAsAdmin(User admin, User user,Role role){
+	public void changeRoleAsAdmin(User admin, User user, Role role){
 		if (admin.getRole().getId() == Constants.ROLE_ADMIN_ID) {
 			user.setRole(role);
 			userRepository.save(user);
 		}
 		else {
-
+			return;
 		}
 	};
 
@@ -198,8 +198,13 @@ public class UserServiceImpl implements UserService{
 	public Collection<Time> findAllTimes() {
 		return timeRepository.findAll();
 	}
-	
 
+	public Collection<Role> findAllRoles() {
+		return roleRepository.findAll();
+	}
 
+	public Role findRoleById(Long id) {
+		return this.roleRepository.findById(id).orElse(null);
+	}
 
 }

@@ -39,9 +39,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
+import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
 import fr.tse.poc.domain.User;
 import fr.tse.poc.dto.CreateTimeDTO;
+import fr.tse.poc.service.ProjectService;
 import fr.tse.poc.service.UserService;
 
 @RestController
@@ -49,6 +51,8 @@ import fr.tse.poc.service.UserService;
 public class UserController {
 
 	private @Autowired UserService userService;
+	private @Autowired ProjectService projectService;
+
 
 	@GetMapping("/users")
 	public Collection<User> findAllUsers() {
@@ -70,7 +74,10 @@ public class UserController {
 		return this.userService.findAllAdmins();
 	}
 	
-	
+	@GetMapping("/times")
+	public Collection<Time> findAllTimess(){
+		return this.userService.findAllTimes();
+	}
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 
 
@@ -97,12 +104,26 @@ public class UserController {
 		return this.changeManagerOfUser(user, manager);
 	}
 	
-	@GetMapping("users/managed_times/{id}")
+	@GetMapping("/managers/managed_times/{id}")
 	public Map<Long, Integer> getTimesOfMyUsers(@PathVariable Long id) {
 		User manager = userService.findUserById(id);
 		return  userService.getTimeOfMyUsers(manager);
 	}
 	
+	@GetMapping("/users/times/{id_manager}/{id_user}")
+	public Set<Time> getTimeOfUser(@PathVariable Long id_manager, @PathVariable Long id_user) {
+		User manager = userService.findUserById(id_manager);
+		User user = userService.findUserById(id_manager);
+		return  userService.getTimesOfUser(user, manager);
+	}
+	
+	@GetMapping("/users/times/{id_manager}/{id_user}/{id_project}")
+	public Set<Time> getTimeOfUserInProject(@PathVariable Long id_manager, @PathVariable Long id_user, @PathVariable Long id_project) {
+		User manager = userService.findUserById(id_manager);
+		User user = userService.findUserById(id_manager);
+		Project project = projectService.findProjectById(id_project);
+		return  userService.getTimesOfUserInProject(user, manager, project);
+	}
 	
 	@GetMapping(value = "/users/{id}/exportDoc", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 	public void getTimesForUser(@PathVariable Long id) throws IOException {

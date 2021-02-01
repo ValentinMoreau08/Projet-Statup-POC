@@ -193,6 +193,11 @@ public class UserServiceImpl implements UserService{
 			return null;
 		}
 	}
+
+	@Override
+	public Collection<Time> findAllTimes() {
+		return timeRepository.findAll();
+	}
 	
 
 

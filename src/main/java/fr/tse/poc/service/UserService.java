@@ -19,6 +19,7 @@ public interface UserService {
 	public Collection<User> findAllManagers();
 	public Collection<User> findAllAdmins();
 	public Collection<User> findAllSimpleUsers();
+	public Collection<Time> findAllTimes();
 	public Time createTimeAsUser(CreateTimeDTO createTimeDTO, Long userId);
 	public User findUserById(Long id);
 	public Time findTimeById(Long id);

@@ -156,11 +156,11 @@ public class UserServiceTest {
 
 		}
 	
-//	@Test
-//	public void getTimesOfUser() {
-//		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
-//		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
-//		Set<Time> user1Times = user1.getTimes();
-//		Assert.assertEquals(user1Times, userService.getTimesOfUser(user1, manager1));
-//	}
+	@Test
+	public void getTimesOfUser() {
+		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+		Set<Time> user1Times = user1.getTimes();
+		Assert.assertEquals(user1Times, userService.getTimesOfUser(user1, manager1));
+	}
 }

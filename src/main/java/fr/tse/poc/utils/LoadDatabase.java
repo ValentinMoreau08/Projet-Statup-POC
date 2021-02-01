@@ -63,6 +63,8 @@ public class LoadDatabase {
 		userAdmin = new User("userLogin1", "userLogin1", "admin", "admin", admin);
 		userManager = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager);
 		userUser = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", user);
+		userManager.addManaged(userUser);
+		userUser.setManager(userManager);
 		userRepository.save(userAdmin);
 		userRepository.save(userManager);
 		userRepository.save(userUser);
@@ -76,12 +78,11 @@ public class LoadDatabase {
 	public void initTimes(TimeRepository timeRepository, UserRepository userRepository, ProjectRepository projectRepository) {
 		if(timeRepository.findAll().size()!=0) return;
 		Project project = projectRepository.findAll().iterator().next();
-		User user = userRepository.findAll().iterator().next();
 		Time time1 = new Time(3, new Date(System.currentTimeMillis()));
 		time1.setProject(project);
-		time1.setUser(user);
-		user.addTime(time1);
-		userRepository.save(user);
+		time1.setUser(userUser);
+		userUser.addTime(time1);
+		userRepository.save(userUser);
 		timeRepository.save(time1);
 	}
 	

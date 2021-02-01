@@ -34,5 +34,7 @@ public interface UserService {
 	public User addUserToManager(User admin, User user, User manager);
 	public Collection<Role> findAllRoles();
 	public Role findRoleById(Long id);
+	public Collection<User> findManagedByManager(User manager);
+	public void exportTimesManaged(User manager);
 	
 }

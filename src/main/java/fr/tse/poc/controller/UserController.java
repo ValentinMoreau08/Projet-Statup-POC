@@ -61,10 +61,18 @@ public class UserController {
 		return this.userService.findAllAdmins();
 	}
 	
+	@GetMapping("/managers/{id}/managed")
+	public Collection<User> findManagedByManager(@PathVariable Long id){
+		User manager = userService.findUserById(id);
+		return userService.findManagedByManager(manager);
+	}
+	
 	@GetMapping("/times")
 	public Collection<Time> findAllTimess(){
 		return this.userService.findAllTimes();
 	}
+	
+	
 	// On va plus utiliser un dto (data transfert object) pour éviter de mettre in Time, et faire passer cet objet directement dans la couche service comme vu en cours
 
 
@@ -144,5 +152,12 @@ public class UserController {
 		Role role = roleRepository.findById(id_role).get();
 		userService.changeRoleAsAdmin(admin, user, role);
 		return user;
+  }
+	
+	// Export .docx des temps des managed
+	@GetMapping("/managers/managed_times/{id}/exportdoc")
+	public void exportTimesManaged(@PathVariable Long id) throws IOException {
+		User manager = userService.findUserById(id);
+		userService.exportTimesManaged(manager);
 	}
 }

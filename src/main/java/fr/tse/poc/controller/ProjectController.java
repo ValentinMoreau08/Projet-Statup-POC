@@ -1,6 +1,7 @@
 package fr.tse.poc.controller;
 
 import java.util.Collection;
+import java.util.Set;
 
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.service.ProjectService;
@@ -35,4 +36,9 @@ public class ProjectController {
     public Project createProject(@RequestBody Project project){
         return this.projectService.createProject(project);
     }
+    
+	@GetMapping("/projects/{id}/times")
+	public Set<Time> findTimesAsUser(@PathVariable Long id) {
+		return this.projectService.findTimesForProject(id);
+	}
 }

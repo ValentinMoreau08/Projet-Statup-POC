@@ -47,4 +47,10 @@ public class ProjectServiceImpl implements ProjectService {
 		else
 			return null;
 	}
+
+	@Override
+	public Set<Time> findTimesForProject(Long id) {
+		Project project = this.findProjectById(id);
+		return project.getTimes();
+	}
 }

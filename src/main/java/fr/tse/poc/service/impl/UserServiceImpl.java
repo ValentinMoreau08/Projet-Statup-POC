@@ -268,4 +268,10 @@ public class UserServiceImpl implements UserService{
 		return this.roleRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	public Set<Time> findTimesAsUser(Long id) {
+		User user = this.findUserById(id);
+		return user.getTimes();
+	}
+
 }

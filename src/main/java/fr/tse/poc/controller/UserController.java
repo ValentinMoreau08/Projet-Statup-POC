@@ -97,6 +97,11 @@ public class UserController {
 		return userService.createTimeAsUser(createTimeDTO, id);
 	}
 	
+	@GetMapping("/users/{id}/times")
+	public Set<Time> findTimesAsUser(@PathVariable Long id) {
+		return userService.findTimesAsUser(id);
+	}
+	
 	@PatchMapping("/users/{id_admin}/{id_user}/{id_manager}")
 	public User addUserToManager(@PathVariable Long id_user,@PathVariable Long id_manager,@PathVariable Long id_admin) {
 		User user = userService.findUserById(id_user);

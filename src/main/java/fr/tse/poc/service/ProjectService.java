@@ -14,5 +14,6 @@ public interface ProjectService {
     public Project findProjectById(Long id);
     
 	public  Set<Time> getTimesOfProject(Project project, User manager);
+	public Set<Time> findTimesForProject(Long id);
 
 }

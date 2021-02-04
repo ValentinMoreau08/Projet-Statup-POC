@@ -275,6 +275,11 @@ public class UserServiceImpl implements UserService{
 	public User createUser2(User user) {		
 		userRepository.save(user);
 		return user;
+  }
+  	@Override
+    public Set<Time> findTimesAsUser(Long id) {
+		User user = this.findUserById(id);
+		return user.getTimes();
 	}
 
 }

@@ -12,6 +12,8 @@ import fr.tse.poc.domain.User;
 import fr.tse.poc.dto.CreateTimeDTO;
 
 public interface UserService {
+	
+	public User createUser2(User user);
 	public User createUser(String login, String password, String name, String firstname, Role role);
 	public User createUserAsManager(String login, String password, String name, String firstname, User manager, Role role);
 	
@@ -20,11 +22,12 @@ public interface UserService {
 	public Collection<User> findAllAdmins();
 	public Collection<User> findAllSimpleUsers();
 	public Collection<Time> findAllTimes();
+
 	public Time createTimeAsUser(CreateTimeDTO createTimeDTO, Long userId);
 	public User findUserById(Long id);
 	public Time findTimeById(Long id);
   
-	public void changeManagerOfUser(User user, User manager);
+	public User changeManagerOfUser(User user, User manager);
 	public void changeRoleAsAdmin(User admin, User user,Role role);
 	
 	public Set<Time> getTimesOfUser(User user, User manager);

@@ -37,7 +37,6 @@ public class UserController {
 
 	private @Autowired UserService userService;
 	private @Autowired ProjectService projectService;
-	private @Autowired
 	RoleRepository roleRepository;
 
 
@@ -45,6 +44,18 @@ public class UserController {
 	public Collection<User> findAllUsers() {
 		return userService.findAllUsers();
 	}
+	
+	@GetMapping("/roles")
+	public Collection<Role> findAllRoles() {
+		return userService.findAllRoles();
+	}
+	
+	
+	@PostMapping("/users")
+	public User createUser(@Valid @RequestBody User user) {
+		return userService.createUser2(user);
+	}
+	
 	
 	@GetMapping("/simple_users")
 	public Collection<User> findAllSimpleUsers(){
@@ -99,9 +110,11 @@ public class UserController {
 		return userService.addUserToManager(admin, user, manager);
 	}
 
-	@PatchMapping("/users/{id}")
-	public User changeManagerOfUser(User user, User manager) {
-		return this.changeManagerOfUser(user, manager);
+	@PatchMapping("/users/{id_user}/{id_manager}")
+	public User changeManagerOfUser(@PathVariable Long id_user, @PathVariable Long id_manager) {
+		User user = userService.findUserById(id_user);
+		User manager = userService.findUserById(id_manager);
+		return userService.changeManagerOfUser(user, manager);
 	}
 	
 	@GetMapping("/managers/managed_times/{id}")

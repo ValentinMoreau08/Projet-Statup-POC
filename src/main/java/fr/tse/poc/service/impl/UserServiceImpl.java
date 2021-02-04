@@ -103,9 +103,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void changeManagerOfUser(User user, User manager) {
+	@Transactional
+	public User changeManagerOfUser(User user, User manager) {
 		user.setManager(manager);
 		userRepository.save(user);
+		return user;
 	}
 
 	@Override
@@ -266,6 +268,13 @@ public class UserServiceImpl implements UserService{
 
 	public Role findRoleById(Long id) {
 		return this.roleRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	@Transactional
+	public User createUser2(User user) {		
+		userRepository.save(user);
+		return user;
 	}
 
 }

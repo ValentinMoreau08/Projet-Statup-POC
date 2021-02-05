@@ -167,7 +167,7 @@ public class UserController {
 	public User changeRoleAsAdmin(@PathVariable Long id_admin, @PathVariable Long id_user, @PathVariable Long id_role){
 		User user = userService.findUserById(id_user);
 		User admin = userService.findUserById(id_admin);
-		Role role = roleRepository.findById(id_role).get();
+		Role role = userService.findRoleById(id_role);
 		userService.changeRoleAsAdmin(admin, user, role);
 		return user;
   }

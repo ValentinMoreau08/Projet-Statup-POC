@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.invoke.ConstantCallSite;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -272,7 +273,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public User createUser2(User user) {		
+	public User createUser2(User user) {
+		user.setRole(this.findRoleById(Constants.ROLE_USER_ID));
 		userRepository.save(user);
 		return user;
   }

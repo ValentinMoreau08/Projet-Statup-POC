@@ -18,6 +18,14 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -221,7 +229,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void exportTimesManaged(User manager) {
+	public ResponseEntity<Resource> exportTimesManaged(User manager) {
 		if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID) {
 			Collection<User> managed = manager.getManaged();
 			XWPFDocument document = new XWPFDocument();
@@ -250,7 +258,7 @@ public class UserServiceImpl implements UserService{
 			}
 			FileOutputStream out;
 			try {
-				out = new FileOutputStream(new File("./test.docx"));
+				out = new FileOutputStream(new File("./export_"+manager.getId()+".docx"));
 				document.write(out);
 				document.close();
 				out.close();
@@ -259,8 +267,26 @@ public class UserServiceImpl implements UserService{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			 FileSystemResource resource = new FileSystemResource("./export_"+manager.getId()+".docx");
+		        // 2.
+		        MediaType mediaType = MediaTypeFactory
+		                .getMediaType(resource)
+		                .orElse(MediaType.APPLICATION_OCTET_STREAM);
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.setContentType(mediaType);
+		        // 3
+		        ContentDisposition disposition = ContentDisposition
+		                // 3.2
+		        		.builder("inline")// or .attachment()
+		                // 3.1
+		                .filename(resource.getFilename())
+		                .build();
+		        headers.setContentDisposition(disposition);
+		        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+		}
+		return null;	
 
-		}	
+	    
 	}
 
 	public Collection<Role> findAllRoles() {

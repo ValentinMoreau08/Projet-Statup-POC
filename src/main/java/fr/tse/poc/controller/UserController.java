@@ -3,6 +3,9 @@ package fr.tse.poc.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -12,9 +15,20 @@ import fr.tse.poc.domain.Role;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -139,7 +153,8 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/users/{id}/exportDoc", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-	public void getTimesForUser(@PathVariable Long id) throws IOException {
+	public ResponseEntity<Resource> getTimesForUser(@PathVariable Long id,  HttpServletRequest request, 
+            HttpServletResponse response) throws IOException {
 		User user = userService.findUserById(id);
 		Set<Time> times = user.getTimes();
 		XWPFDocument document = new XWPFDocument();
@@ -157,10 +172,26 @@ public class UserController {
 					+ String.valueOf(time.getTime() + "h - Project : " + time.getProject().getName()));
 			tmpRun.addBreak();
 		}
-		FileOutputStream out = new FileOutputStream(new File("./test.docx"));
+		FileOutputStream out = new FileOutputStream(new File("./export_"+user.getId()+".docx"));
 		document.write(out);
 		document.close();
 		out.close();
+		 FileSystemResource resource = new FileSystemResource("./export_"+user.getId()+".docx");
+	        // 2.
+	        MediaType mediaType = MediaTypeFactory
+	                .getMediaType(resource)
+	                .orElse(MediaType.APPLICATION_OCTET_STREAM);
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType);
+	        // 3
+	        ContentDisposition disposition = ContentDisposition
+	                // 3.2
+	        		.builder("inline")// or .attachment()
+	                // 3.1
+	                .filename(resource.getFilename())
+	                .build();
+	        headers.setContentDisposition(disposition);
+	        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 
 	@PatchMapping("/users/roles/{id_admin}/{id_user}/{id_role}")
@@ -177,5 +208,6 @@ public class UserController {
 	public void exportTimesManaged(@PathVariable Long id) throws IOException {
 		User manager = userService.findUserById(id);
 		userService.exportTimesManaged(manager);
+		
 	}
 }

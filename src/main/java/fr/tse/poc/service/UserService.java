@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Role;
 import fr.tse.poc.domain.Time;
@@ -38,7 +41,7 @@ public interface UserService {
 	public Collection<Role> findAllRoles();
 	public Role findRoleById(Long id);
 	public Collection<User> findManagedByManager(User manager);
-	public void exportTimesManaged(User manager);
+	public ResponseEntity<Resource> exportTimesManaged(User manager);
 	public Set<Time> findTimesAsUser(Long id);
 	
 }

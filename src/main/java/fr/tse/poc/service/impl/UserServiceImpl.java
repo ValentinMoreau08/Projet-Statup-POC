@@ -113,9 +113,19 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public User changeManagerOfUser(User user, User manager) {
-		user.setManager(manager);
-		userRepository.save(user);
+	public User changeManagerOfUser(User admin, User user, User manager) {
+		if(admin.getRole().getId() == Constants.ROLE_ADMIN_ID)
+		{
+			if(manager.getRole().getId() == Constants.ROLE_MANAGER_ID)
+			{
+				Set<User> managed = manager.getManaged();
+				managed.add(user);
+				manager.setManaged(managed);
+				user.setManager(manager);
+				userRepository.save(user);
+				userRepository.save(manager);
+			}
+		}
 		return user;
 	}
 

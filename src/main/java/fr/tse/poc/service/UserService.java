@@ -30,7 +30,7 @@ public interface UserService {
 	public User findUserById(Long id);
 	public Time findTimeById(Long id);
   
-	public User changeManagerOfUser(User user, User manager);
+	public User changeManagerOfUser(User admin, User user, User manager);
 	public void changeRoleAsAdmin(User admin, User user,Role role);
 	
 	public Set<Time> getTimesOfUser(User user, User manager);

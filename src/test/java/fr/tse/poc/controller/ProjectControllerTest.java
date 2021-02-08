@@ -10,8 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.service.ProjectService;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,8 +29,15 @@ import java.util.Collection;
 @ActiveProfiles(profiles = "test")
 public class ProjectControllerTest extends ControllerTest {
 
-    @Autowired
-    ProjectService projectService;
+    
+	private @Autowired ProjectService projectService;
+    
+    @Test
+	public void findAllProjectsTest() throws Exception {
+		mvc.perform(get("/projects").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
 
     @Test
     public void createProjectTest() throws Exception{
@@ -42,11 +50,18 @@ public class ProjectControllerTest extends ControllerTest {
         mvc.perform(post("/projects")
                 .contentType(MediaType.APPLICATION_JSON).content(projectAsBytes))
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        ;
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 
         Collection<Project> projects = this.projectService.findAllProjects();
 
-        Assert.assertEquals(2, projects.size());
+        Assertions.assertEquals(2, projects.size());
     }
+    
+    @Test
+   	public void findTimesAsUserTest() throws Exception {
+    	Long idProject = projectService.findAllProjects().iterator().next().getId();
+   		mvc.perform(get("/projects/" + idProject + "/times").contentType(MediaType.APPLICATION_JSON))
+   				.andExpect(status().isOk())
+   				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+   	}
 }

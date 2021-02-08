@@ -23,10 +23,16 @@ public class LoadDatabase {
 	private Role admin;
 	private Role manager;
 	private Role user;
+	
 	private User userAdmin;
 	private User userManager;
 	private User userUser;
+
+
 	private Project project1;
+	private Project project2;
+	private Project project3;
+
 	
 	@Bean	// Method that will create beam disponible in spring environnement
 	@Profile("!test")
@@ -35,6 +41,9 @@ public class LoadDatabase {
 			@Override
 			public void run(String... args) throws Exception {
 				//if(!needInitializer(userRepository, roleRepository)) return;
+				userRepository.deleteAll();
+				projectRepository.deleteAll();
+				roleRepository.deleteAll();
 				initRole(roleRepository);
 				initUsers(userRepository);
 				initProjects(projectRepository);
@@ -60,9 +69,9 @@ public class LoadDatabase {
 	}
 	
 	public void initUsers(UserRepository userRepository) {
-		userAdmin = new User("userLogin1", "userLogin1", "admin", "admin", admin);
-		userManager = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", manager);
-		userUser = new User("userLogin1", "userLogin1", "userName1", "userFirstname1", user);
+		userAdmin = new User("admin@gmail.com", "admin", "Stewart", "Stephen", admin);
+		userManager = new User("manager@gmail.com", "manager", "Lambert", "Dan", manager);
+		userUser = new User("user@gmail.com", "user", "Ferguson", "Oliver", user);
 		userManager.addManaged(userUser);
 		userUser.setManager(userManager);
 		userRepository.save(userAdmin);
@@ -71,8 +80,14 @@ public class LoadDatabase {
 	}
 
 	public void initProjects(ProjectRepository projectRepository){
-		project1 = new Project("project1","client1","description1");
+		project1 = new Project("Kanban","Rémy Girodon","Développer le back-end d'une application web avec spring");
+		project2 = new Project("Metadev","Pierre-Yves Fraisse","Répondre à l'appel d'offre du client");
+		project3 = new Project("PRI","Sylvain dernat","Application Mobile");
+
 		projectRepository.save(project1);
+		projectRepository.save(project2);
+		projectRepository.save(project3);
+
 	}
 	
 	public void initTimes(TimeRepository timeRepository, UserRepository userRepository, ProjectRepository projectRepository) {

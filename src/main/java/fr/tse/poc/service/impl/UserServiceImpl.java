@@ -277,7 +277,7 @@ public class UserServiceImpl implements UserService{
 		        // 3
 		        ContentDisposition disposition = ContentDisposition
 		                // 3.2
-		        		.builder("inline")// or .attachment()
+		        		.builder("attachment")// or .attachment()
 		                // 3.1
 		                .filename(resource.getFilename())
 		                .build();

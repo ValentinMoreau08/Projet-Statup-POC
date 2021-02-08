@@ -2,6 +2,7 @@ package fr.tse.poc.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -38,7 +39,7 @@ public class UserServiceTest {
     private @Autowired RoleRepository roleRepository;
 
     @Test
-    public void testCreateUser(){
+    public void createUserTest(){
     	int prevSize = userRepository.findAll().size();
         User testUser = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(3L).orElse(null));
         Assert.assertEquals(prevSize+1, userRepository.findAll().size());
@@ -47,7 +48,7 @@ public class UserServiceTest {
     }
     
     @Test
-    public void testCreateUserAsManager(){
+    public void createUserAsManagerTest(){
 		User manager = userService.createUser("loginTest", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(2L).orElse(null));
         userRepository.save(manager);
     	int prevSizeUserRepo = userService.findAllUsers().size();
@@ -66,7 +67,7 @@ public class UserServiceTest {
     
     @Test
     @Transactional
-    public void testCreateTimeAsUser(){
+    public void createTimeAsUserTest(){
     	User user = userRepository.findAll().get(0);
     	Project project = projectRepository.findAll().get(0);
     	int tim = 3;
@@ -98,7 +99,7 @@ public class UserServiceTest {
 
     @Test
     @Transactional
-    public void testChangeRoleAsAdmin(){
+    public void changeRoleAsAdminTest(){
         User testUser = userService.createUser("loginTest","passwordTest","nameTest","firstnameTest", roleRepository.findById(3L).get());
         User admin = userService.createUser("loginTest","passwordTest","nameTest","firstnameTest", roleRepository.findById(1L).get());
         userService.changeRoleAsAdmin(admin,testUser,roleRepository.findById(2L).get());
@@ -107,23 +108,32 @@ public class UserServiceTest {
         userRepository.delete(admin);
     }
     
-	@Test
+    @Test
+	public void findAllUsersTest() {
+    	Assert.assertEquals(userRepository.findAll().size(), userService.findAllUsers().size());
+    }
+    
+    @Test
+    @Transactional
 	public void testChangeMangerOfUser() {
 		User manager1 = userService.createUser("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
 		User manager2 = userService.createUser("loginManager2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
-        User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager1, roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
-        userService.changeManagerOfUser(testUser, manager2);
+		User admin1 = userService.createUser("loginAdmin1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_ADMIN_ID).orElse(null));
+		User testUser = userService.createUserAsManager("loginTest", "passwordTest", "nameTest", "firstnameTest",manager1, roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+        userService.changeManagerOfUser(admin1, testUser, manager2);
         Assertions.assertEquals(manager2,testUser.getManager());
         userRepository.delete(manager1);
         userRepository.delete(testUser);
         userRepository.delete(manager2);
+        userRepository.delete(admin1);
 	}
 	
 	@Test
 	public void findAllManagersTest() {
+		int prevSize = userService.findAllManagers().size();
 		User manager1 = userService.createUser("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
 		User manager2 = userService.createUser("loginManager2", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
-        Assert.assertEquals(4, userService.findAllManagers().size());
+        Assert.assertEquals(prevSize + 2, userService.findAllManagers().size());
         userRepository.delete(manager1);
         userRepository.delete(manager2);
 	}
@@ -147,25 +157,44 @@ public class UserServiceTest {
 	}
 	
 	@Test
+	public void getTimesOfUserTest() {
+		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+		Set<Time> user1Times = user1.getTimes();
+		Assert.assertEquals(user1Times, userService.getTimesOfUser(user1, manager1));
+	}
+	
+	@Test
+	public void getTimesOfUserInProjectTest() {
+		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
+		Project project1 = new Project("project1","client1","description1");
+		Set<Time> user1Times = user1.getTimes();
+		Assert.assertEquals(user1Times, userService.getTimesOfUserInProject(user1, manager1, project1));
+	}
+	
+	@Test
 	public void addUserToManagerTest() {
 		User admin1 = new User("loginAdmin1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_ADMIN_ID).orElse(null));
 		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
 		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
 		userService.addUserToManager(admin1, user1, manager1);
 		Assert.assertEquals(user1.getManager(), manager1);
-
-		}
+	}
 	
 	@Test
-	public void getTimesOfUser() {
-		User user1 = new User("loginUser1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_USER_ID).orElse(null));
+	public void getTimeOfMyUsersTest() {
+		/*User user2 = userService.findAllManagers().iterator().next();
+		Map<Long, Integer> times = userService.getTimeOfMyUsers(user2);
+		Assert.assertEquals(1, times.size());
+		Assert.assertEquals(3, (int) times.values().iterator().next());*/
 		User manager1 = new User("loginManager1", "passwordTest", "nameTest", "firstnameTest", roleRepository.findById(Constants.ROLE_MANAGER_ID).orElse(null));
-		Set<Time> user1Times = user1.getTimes();
-		Assert.assertEquals(user1Times, userService.getTimesOfUser(user1, manager1));
+		Map<Long, Integer> times = userService.getTimeOfMyUsers(manager1);
+		Assert.assertEquals(0, times.size());
 	}
 
 	@Test
-	public void findAllRoles() {
+	public void findAllRolesTest() {
 		Assert.assertEquals(3, userService.findAllRoles().size());
 	}
 }

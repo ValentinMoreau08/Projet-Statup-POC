@@ -26,11 +26,9 @@ import com.jayway.jsonpath.JsonPath;
 
 import fr.tse.poc.dao.ProjectRepository;
 import fr.tse.poc.dao.TimeRepository;
+import fr.tse.poc.dao.UserRepository;
 import fr.tse.poc.domain.Project;
 import fr.tse.poc.domain.Time;
-import fr.tse.poc.domain.User;
-import fr.tse.poc.service.UserService;
-
 import fr.tse.poc.domain.User;
 import fr.tse.poc.service.UserService;
 
@@ -42,6 +40,7 @@ public class UserControllerTest extends ControllerTest{
 
 
 	private @Autowired UserService userService;
+	private @Autowired UserRepository userRepository;
 	private @Autowired TimeRepository timeRepository;
 	private @Autowired ProjectRepository projectRepository;
 	
@@ -53,38 +52,63 @@ public class UserControllerTest extends ControllerTest{
 	}
 	
 	@Test
-	public void testGetSimpleUsers() throws Exception {
+	public void findAllRolesTest() throws Exception {
+		mvc.perform(get("/roles").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
+	
+	@Test
+	public void createUserTest()throws Exception {
+		String content = "{\"login\": \"testUserLogin\", \"password\": \"mypassword\", \"name\": \"testUserName\", \"firstname\": \"testUserFirstname\"}";
+		MvcResult mvcResult = mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(content))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andReturn();
+		
+		String response = mvcResult.getResponse().getContentAsString();
+		
+		Long userId = Long.valueOf((Integer) JsonPath.parse(response).read("$.id"));
+		
+		String login = JsonPath.parse(response).read("$.login");
+		Assertions.assertEquals("testUserLogin", login);
+		
+		userRepository.deleteById(userId);
+		
+	}
+	
+	@Test
+	public void findAllSimpleUsersTest() throws Exception {
 		mvc.perform(get("/simple_users")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 	}
 	@Test
-	public void testGetManagers() throws Exception {
+	public void findAllManagersTest() throws Exception {
 		mvc.perform(get("/managers")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 	}
 	@Test
-	public void testGetAdmins() throws Exception {
+	public void findAllAdminsTest() throws Exception {
 		mvc.perform(get("/admins")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 	}
+	
+	
 	@Test
-	public void testAddUserToManager() throws Exception {
-		Long user_id = this.userService.findAllSimpleUsers().iterator().next().getId();
-		Long manager_id = this.userService.findAllManagers().iterator().next().getId();
-		Long admin_id = this.userService.findAllAdmins().iterator().next().getId();		
-		mvc.perform(patch("/users/" + admin_id + "/" + user_id + "/" + manager_id)
+	public void findManagedByManagerTest() throws Exception {
+		Long id = userService.findAllUsers().iterator().next().getId();
+		mvc.perform(get("/managers/" + id + "/managed")
 				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+				.andExpect(status().isOk());
 	}
 	
-  @Test
+	@Test
 	@Transactional
 	public void createTimeAsUserTest() throws Exception {
 		User user = ((List<User>) userService.findAllUsers()).get(0);
@@ -133,7 +157,79 @@ public class UserControllerTest extends ControllerTest{
 				.andExpect(status().isBadRequest());
 		
 	}
+	
+	@Test
+	public void addUserToManagerTest() throws Exception {
+		Long user_id = this.userService.findAllSimpleUsers().iterator().next().getId();
+		Long manager_id = this.userService.findAllManagers().iterator().next().getId();
+		Long admin_id = this.userService.findAllAdmins().iterator().next().getId();		
+		mvc.perform(patch("/users/" + admin_id + "/" + user_id + "/" + manager_id)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
+	
+	
+	
+	@Test
+	public void changeManagerOfUserTest() throws Exception {
+		Long user_id = this.userService.findAllSimpleUsers().iterator().next().getId();
+		Long manager_id = this.userService.findAllManagers().iterator().next().getId();
+		Long admin_id = this.userService.findAllAdmins().iterator().next().getId();		
+		mvc.perform(patch("/users/" + admin_id + "/" + user_id + "/" + manager_id)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
+	
+	@Test
+	public void getTimesOfMyUsersTest() throws Exception {
+		Long id = userService.findAllManagers().iterator().next().getId();
+		mvc.perform(get("/managers/managed_times/"+id)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
+	
+	@Test
+	public void getTimeOfUserTest() throws Exception {
+		Long idManager = userService.findAllManagers().iterator().next().getId();
+		Long idUser = userService.findAllSimpleUsers().iterator().next().getId();
+		mvc.perform(get("/users/times/" + idManager + "/" + idUser)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
+	
+	@Test
+	public void getTimeOfUserInProjectTest() throws Exception {
+		Long idManager = userService.findAllManagers().iterator().next().getId();
+		Long idUser = userService.findAllSimpleUsers().iterator().next().getId();
+		Long idProject = projectRepository.findAll().iterator().next().getId();
+		mvc.perform(get("/users/times/" + idManager + "/" + idUser + "/" + idProject)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+	}
+	
+	@Test
+	public void getTimesForUserTest() throws Exception {
+		Long idUser = userService.findAllSimpleUsers().iterator().next().getId();
+		mvc.perform(get("/users/" + idUser + "/exportDoc")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+	
+	
+	@Test
+	public void exportTimesManagedTest() throws Exception {
+		Long idManager = userService.findAllManagers().iterator().next().getId();
+		mvc.perform(get("/managers/managed_times/" + idManager + "/exportdoc")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
 
+	
 //	@Test
 //	public void changeRoleAsAdmin() throws Exception {
 //		Long user_id = this.userService.findAllUsers().iterator().next().getId();

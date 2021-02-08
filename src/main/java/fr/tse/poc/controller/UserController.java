@@ -124,7 +124,7 @@ public class UserController {
 		return userService.addUserToManager(admin, user, manager);
 	}
 
-	@PatchMapping("/users/{id_user}/{id_manager}")
+	@PatchMapping("/users/{id_admin}/{id_user}/{id_manager}")
 	public User changeManagerOfUser(@PathVariable Long id_user, @PathVariable Long id_manager) {
 		User user = userService.findUserById(id_user);
 		User manager = userService.findUserById(id_manager);

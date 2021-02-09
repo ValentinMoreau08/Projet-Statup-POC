@@ -321,8 +321,10 @@ public class UserServiceImpl implements UserService{
 		return user.getTimes();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ResponseEntity<Resource> exportMonthlyTimes(User user, int month, int year) {
+		//System.out.println("ExportMonthly|month="+month+"|year="+year);
 		Set<Time> times = user.getTimes();
 		XWPFDocument document = new XWPFDocument();
 		XWPFParagraph tmpParagraph = document.createParagraph();
@@ -331,11 +333,13 @@ public class UserServiceImpl implements UserService{
 		tmpRun.setFontSize(18);
 		tmpRun.addBreak();
 		tmpRun.addBreak();
-		tmpRun.setText("Temps saisis du mois: "+month+" "+ year);
+		tmpRun.setText("Temps saisis du mois: "+(month+1)+" "+ year);
 		tmpRun.addBreak();
 		tmpRun.addBreak();
 		for (Time time : times) {
-			if(time.getDate().getMonth() == month && time.getDate().getYear() == year)
+			//System.out.println("month="+time.getDate().getMonth());
+			//System.out.println("year="+time.getDate().getYear());
+			if(time.getDate().getMonth() == month && time.getDate().getYear() == (year - 1900))
 			{tmpRun.setText(time.getDate() + " : "
 					+ String.valueOf(time.getTime() + "h - Project : " + time.getProject().getName()));
 			tmpRun.addBreak();}

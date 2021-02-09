@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.invoke.ConstantCallSite;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -318,6 +319,54 @@ public class UserServiceImpl implements UserService{
     public Set<Time> findTimesAsUser(Long id) {
 		User user = this.findUserById(id);
 		return user.getTimes();
+	}
+
+	@Override
+	public ResponseEntity<Resource> exportMonthlyTimes(User user, int month, int year) {
+		Set<Time> times = user.getTimes();
+		XWPFDocument document = new XWPFDocument();
+		XWPFParagraph tmpParagraph = document.createParagraph();
+		XWPFRun tmpRun = tmpParagraph.createRun();
+		tmpRun.setText("Nom et prénom : " + user.getName()+" "+user.getFirstname());
+		tmpRun.setFontSize(18);
+		tmpRun.addBreak();
+		tmpRun.addBreak();
+		tmpRun.setText("Temps saisis du mois: "+month+" "+ year);
+		tmpRun.addBreak();
+		tmpRun.addBreak();
+		for (Time time : times) {
+			if(time.getDate().getMonth() == month && time.getDate().getYear() == year)
+			{tmpRun.setText(time.getDate() + " : "
+					+ String.valueOf(time.getTime() + "h - Project : " + time.getProject().getName()));
+			tmpRun.addBreak();}
+		}
+		FileOutputStream out;
+		try {
+			out = new FileOutputStream(new File("./exportMonth_"+month+"_"+user.getId()+".docx"));
+			document.write(out);
+			document.close();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		 FileSystemResource resource = new FileSystemResource("./exportMonth_"+month+"_"+user.getId()+".docx");
+	        // 2.
+	        MediaType mediaType = MediaTypeFactory
+	                .getMediaType(resource)
+	                .orElse(MediaType.APPLICATION_OCTET_STREAM);
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType);
+	        // 3
+	        ContentDisposition disposition = ContentDisposition
+	                // 3.2
+	        		.builder("inline")// or .attachment()
+	                // 3.1
+	                .filename(resource.getFilename())
+	                .build();
+	        headers.setContentDisposition(disposition);
+	        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 
 }

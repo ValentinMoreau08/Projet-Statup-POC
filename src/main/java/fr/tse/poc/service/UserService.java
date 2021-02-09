@@ -42,6 +42,8 @@ public interface UserService {
 	public Role findRoleById(Long id);
 	public Collection<User> findManagedByManager(User manager);
 	public ResponseEntity<Resource> exportTimesManaged(User manager);
+	public ResponseEntity<Resource> exportMonthlyTimes(User user, int month, int year);
+
 	public Set<Time> findTimesAsUser(Long id);
 	
 }

@@ -153,9 +153,14 @@ public class UserController {
 		return  userService.getTimesOfUserInProject(user, manager, project);
 	}
 	
+	@GetMapping(value = "/users/month/{id_user}/{id_month}/{year}/exportDoc", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+	public ResponseEntity<Resource> ExportMonthly(@PathVariable Long id_user, @PathVariable int id_month, @PathVariable int year) throws IOException {
+		User user = userService.findUserById(id_user);
+		return userService.exportMonthlyTimes(user, id_month,year);
+	}
+	
 	@GetMapping(value = "/users/{id}/exportDoc", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-	public ResponseEntity<Resource> getTimesForUser(@PathVariable Long id,  HttpServletRequest request, 
-            HttpServletResponse response) throws IOException {
+	public ResponseEntity<Resource> getTimesForUser(@PathVariable Long id) throws IOException {
 		User user = userService.findUserById(id);
 		Set<Time> times = user.getTimes();
 		XWPFDocument document = new XWPFDocument();

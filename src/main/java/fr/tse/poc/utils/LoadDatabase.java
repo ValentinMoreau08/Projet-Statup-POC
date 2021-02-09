@@ -41,9 +41,7 @@ public class LoadDatabase {
 			@Override
 			public void run(String... args) throws Exception {
 				//if(!needInitializer(userRepository, roleRepository)) return;
-				userRepository.deleteAll();
-				projectRepository.deleteAll();
-				roleRepository.deleteAll();
+
 				initRole(roleRepository);
 				initUsers(userRepository);
 				initProjects(projectRepository);

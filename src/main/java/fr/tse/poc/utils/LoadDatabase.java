@@ -40,7 +40,7 @@ public class LoadDatabase {
 		return new CommandLineRunner() {
 			@Override
 			public void run(String... args) throws Exception {
-				//if(!needInitializer(userRepository, roleRepository)) return;
+				if(!needInitializer(userRepository, roleRepository, projectRepository, timeRepository)) return;
 
 				initRole(roleRepository);
 				initUsers(userRepository);
@@ -51,9 +51,11 @@ public class LoadDatabase {
 	}
 	
 	// Check if database is full empty, so that we need to initialize some data
-	public boolean needInitializer(UserRepository userRepository, RoleRepository roleRepository) {
-		if(roleRepository.findAll().size() != 0) return false;
-		if(userRepository.findAll().size() != 0) return false;
+	public boolean needInitializer(UserRepository userRepository, RoleRepository roleRepository, ProjectRepository projectRepository, TimeRepository timeRepository) {
+		if(roleRepository.count() != 0) return false;
+		if(userRepository.count() != 0) return false;
+		if(projectRepository.count() != 0) return false;
+		if(timeRepository.count() != 0) return false;
 		return true;
 	}
 	

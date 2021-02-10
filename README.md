@@ -1,8 +1,8 @@
 # Projet-Statup-POC
 
-### Diagramme de classe :
-![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/develop/Diagramme%20de%20classe.png)
+### Class diagram :
+![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/develop/Class%20diagram.png)
 
  
-### Architecture (packages) :
-![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/main/Architecture.png)
+### Packages :
+![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/main/Packages.png)

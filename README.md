@@ -1,5 +1,9 @@
 # Projet-Statup-POC
 
+### Documentation API
+Swagger : [Documentation](https://app.swaggerhub.com/apis-docs/Projet-Startup-Poc/Projet-Startup-POC/1.0.0#/)
+
+### Architecture
 ![alt text](Architecture.png)
 
 ### Packages :

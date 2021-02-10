@@ -5,4 +5,4 @@
 
  
 ### Packages :
-![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/main/Packages.png)
+![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/develop/Packages.png)

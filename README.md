@@ -1,8 +1,5 @@
 # Projet-Statup-POC
 
-### Documentation API
-Swagger : [Documentation](https://app.swaggerhub.com/apis-docs/Projet-Startup-Poc/Projet-Startup-POC/1.0.0#/)
-
 ### Architecture
 ![alt text](Architecture.png)
 
@@ -13,8 +10,8 @@ Swagger : [Documentation](https://app.swaggerhub.com/apis-docs/Projet-Startup-Po
 ![alt text](Class%20diagram.png)
 
 
-## API Documentation
-https://app.swaggerhub.com/apis-docs/Projet-Startup-Poc/Projet-Startup-POC/1.0.0#/
+### Documentation API
+Swagger : [Documentation](https://app.swaggerhub.com/apis-docs/Projet-Startup-Poc/Projet-Startup-POC/1.0.0#/)
 
 ## Minimum Requirements
 * **JDK8:**

@@ -28,7 +28,7 @@ Swagger : [Documentation](https://app.swaggerhub.com/apis-docs/Projet-Startup-Po
 ## Configure MySQL access :
 We use 2 Databases in this project : A first for production (default: **poc**), A second for tests only (default: **poc-test**).
    
-- Configure access to these Databases in files :
+- Configure access to these Databases in files ([Documentation](https://gist.github.com/memory-lovers/4132241df38456642ad888634caee5c6)):
   - `src/main/resources/application.properties`
   - `src/main/resources/application-test.properties`
 - **Create MySQL databases :**

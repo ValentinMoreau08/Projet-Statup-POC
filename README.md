@@ -1,8 +1,10 @@
 # Projet-Statup-POC
 
-### Class diagram :
-![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/develop/Class%20diagram.png)
+### Architecture :
+![alt text](Architecture.png)
 
- 
 ### Packages :
-![alt text](https://github.com/ValentinMoreau08/Projet-Statup-POC/blob/develop/Packages.png)
+![alt text](Packages.png)
+
+### Business Objects - Class diagram :
+![alt text](Class%20diagram.png)

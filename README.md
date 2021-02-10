@@ -20,10 +20,16 @@
 - Navigate into cloned folder : `cd Projet-Startup-POC`
 - Use latest branch : `git checkout develop`
 - Import project into your IDE
+
+    
+## Configure MySQL access :
+We use 2 Databases in this project : A first for production (default: **poc**), A second for tests only (default: **poc-test**).
+   
+- Configure access to these Databases in files :
+  - `src/main/resources/application.properties`
+  - `src/main/resources/application-test.properties`
 - **Create MySQL databases :**
-  - In MySQL, create 2 empty database with name defined in :
-    - `src/main/resources/application.properties` (default : **poc**)
-    - `src/main/resources/application-test.properties` (default : **poc-test**)
+  - In MySQL, create 2 empty database with name defined previously. (Our application will create tables, but can't create Databases)
 
 ## Start
 - Make sure your MySQL is started
